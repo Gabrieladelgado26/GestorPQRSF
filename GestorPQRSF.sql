@@ -10,15 +10,13 @@ USE Gestor_PQRSF;
 -- Crear la tabla solicitud para definir el tipo de solicitud
 CREATE TABLE solicitud(
 	idSolicitud INT PRIMARY KEY AUTO_INCREMENT,  -- Identificador único autoincremental
-    solicitud VARCHAR(20)
+    idPersona INT,
+    tipoSolicitud VARCHAR(20),
+    fecha DATE,
+    descripcion TEXT, -- Descripción de la solicitud (opcional si la persona subio un archivo)
+    archivo VARCHAR(100), -- Archivo (opcional si la descripción esta llena
+    FOREIGN KEY (idPersona) REFERENCES Personas(idPersona) ON DELETE SET NULL -- Llave foránea
 );
-
--- Crear la tabla roles para denifir el rol de la persona
-CREATE TABLE roles(
-	idRol INT PRIMARY KEY AUTO_INCREMENT,  -- Identificador único autoincremental
-    rol VARCHAR(20)
-);
-
 -- Crea la tabla 'Personas' para almacenar a los usuarios
 CREATE TABLE Personas(
     idPersona INT PRIMARY KEY AUTO_INCREMENT,  -- Identificador único autoincremental
@@ -27,8 +25,5 @@ CREATE TABLE Personas(
     cedula VARCHAR(20), -- Cédula de la persona
     telefono VARCHAR(20), -- Telefono de la persona
     correo VARCHAR(200), -- Correo de la persona
-    idSolicitud INT, -- Tipo de solicitud de la persona
-    descripcion TEXT, -- Descripción de la solicitud (opcional si la persona subio un archivo)
-    archivo VARCHAR(100), -- Archivo (opcional si la descripción esta llena
-    FOREIGN KEY (idSolicitud) REFERENCES solicitud(idSolicitud) ON DELETE SET NULL -- Llave foránea
+    rol ENUM('Administrador', 'Usuario')
 );
