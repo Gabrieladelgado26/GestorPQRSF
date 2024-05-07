@@ -4,49 +4,13 @@
 <body>
 
     <%@include file= "templates/navbar.jsp" %>
-    
-    <!-- Under Nav Start -->
-    <div class="container-fluid bg-white py-3">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 text-left mb-3 mb-lg-0">
-                    <div class="d-inline-flex text-left">
-                        <h1 class="flaticon-office font-weight-normal text-primary m-0 mr-3"></h1>
-                        <div class="d-flex flex-column">
-                            <h5>Nuestra oficina</h5>
-                            <p class="m-0">Calle 19 # 43</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 text-left text-lg-center mb-3 mb-lg-0">
-                    <div class="d-inline-flex text-left">
-                        <h1 class="flaticon-email font-weight-normal text-primary m-0 mr-3"></h1>
-                        <div class="d-flex flex-column">
-                            <h5>Nuestro Email</h5>
-                            <p class="m-0">iManager@gmail.com</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 text-left text-lg-right mb-3 mb-lg-0">
-                    <div class="d-inline-flex text-left">
-                        <h1 class="flaticon-telephone font-weight-normal text-primary m-0 mr-3"></h1>
-                        <div class="d-flex flex-column">
-                            <h5>Atención al cliente</h5>
-                            <p class="m-0">+012 345 6789</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Under Nav End -->
 
     <!-- Carousel Start -->
     <div class="container-fluid p-0">
         <div id="header-carousel" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img class="w-100" src="img/carousel-1.jpg" alt=imagen>
+                    <img class="w-100" src="recursos/img/carousel-2.jpg" alt=imagen>
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3" style="max-width: 800px;">
                             <h4 class="text-primary text-uppercase font-weight-normal mb-md-3">Sistema de Peticiones, Quejas, Reclamos, Sugerencias y Felicitaciones</h4>
@@ -56,7 +20,7 @@
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <img class="w-100" src="img/carousel-2.jpg" alt="imagen">
+                    <img class="w-100" src="recursos/img/carousel-1.jpg" alt="imagen">
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3" style="max-width: 800px;">
                             <h4 class="text-primary text-uppercase font-weight-normal mb-md-3">Sistema de Peticiones, Quejas, Reclamos, Sugerencias y Felicitaciones</h4>
@@ -98,25 +62,25 @@
                     <div class="row py-2">
                         <div class="col-sm-6">
                             <div class="d-flex align-items-center mb-4">
-                                <h1 class="flaticon-house font-weight-normal text-primary m-0 mr-3"></h1>
+                                <h1 class="flaticon font-weight-normal text-primary m-0 mr-3"></h1>
                                 <h5 class="text-truncate m-0">Quejas</h5>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="d-flex align-items-center mb-4">
-                                <h1 class="flaticon-stairs font-weight-normal text-primary m-0 mr-3"></h1>
+                                <h1 class="flaticon font-weight-normal text-primary m-0 mr-3"></h1>
                                 <h5 class="text-truncate m-0">Peticiones</h5>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="d-flex align-items-center mb-4">
-                                <h1 class="flaticon-office font-weight-normal text-primary m-0 mr-3"></h1>
+                                <h1 class="flaticon font-weight-normal text-primary m-0 mr-3"></h1>
                                 <h5 class="text-truncate m-0">Reclamos</h5>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="d-flex align-items-center mb-4">
-                                <h1 class="flaticon-living-room font-weight-normal text-primary m-0 mr-3"></h1>
+                                <h1 class="flaticon font-weight-normal text-primary m-0 mr-3"></h1>
                                 <h5 class="text-truncate m-0">Sugerencias</h5>
                             </div>
                         </div>
@@ -140,22 +104,22 @@
                 <div class="col-lg-6 p-0 pt-5 pt-lg-0">
                     <div class="owl-carousel service-carousel position-relative">
                         <div class="d-flex flex-column text-center bg-light mx-3 p-4">
-                            <h3 class="flaticon-bedroom display-3 font-weight-normal text-primary mb-3"></h3>
+                            <h3 class="flaticon display-3 font-weight-normal text-primary mb-3"></h3>
                             <h5 class="mb-3">Peticiones</h5>
                             <p class="m-0">Petición, por motivos de interés general o particular, mediante el cual una persona solicita el reconocimiento de un derecho, la prestación de un servicio, etc.</p>
                         </div>
                         <div class="d-flex flex-column text-center bg-light mx-3 p-4">
-                            <h3 class="flaticon-kitchen display-3 font-weight-normal text-primary mb-3"></h3>
+                            <h3 class="flaticon display-3 font-weight-normal text-primary mb-3"></h3>
                             <h5 class="mb-3">Quejas</h5>
                             <p class="m-0">Manifestación del usuario para expresar inconformidad con el actuar del funcionario, ya sea porque incumplió un deber o violó el régimen de inhabilidades.</p>
                         </div>
                         <div class="d-flex flex-column text-center bg-light mx-3 p-4">
-                            <h3 class="flaticon-bathroom display-3 font-weight-normal text-primary mb-3"></h3>
+                            <h3 class="flaticon display-3 font-weight-normal text-primary mb-3"></h3>
                             <h5 class="mb-3">Reclamos</h5>
                             <p class="m-0">Es la oposición o contrariedad presentada por el usuario, para revisar y evaluar una actuación relacionada con la prestación del servicio en términos económicos.</p>
                         </div>
                         <div class="d-flex flex-column text-center bg-light mx-3 p-4">
-                            <h3 class="flaticon-bathroom display-3 font-weight-normal text-primary mb-3"></h3>
+                            <h3 class="flaticon display-3 font-weight-normal text-primary mb-3"></h3>
                             <h5 class="mb-3">Sugerencia</h5>
                             <p class="m-0">Es una propuesta presentada del usuario para incidir en la mejora de un proceso cuyo objeto está relacionado con la prestación del servicio.</p>
                         </div>
@@ -167,7 +131,7 @@
     <!-- Services End -->
 
     <!-- Footer Start -->
-    <div class="container-fluid bg-dark text-white py-5 px-sm-3 px-md-5">
+    <div class="container-fluid bg-dark text-white py-4 px-sm-3 px-md-5">
             <p class="m-0 text-center text-white">
                 &copy; <a class="text-white font-weight-bold" href="#">Your Site Name</a>. All Rights Reserved. Designed by
                 <a class="text-white font-weight-bold" href="https://htmlcodex.com">HTML Codex</a>
@@ -175,25 +139,8 @@
     </div>
     <!-- Footer End -->
 
-
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-pri back-to-top"><i class="fa fa-angle-double-up"></i></a>
-
-
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="lib/isotope/isotope.pkgd.min.js"></script>
-    <script src="lib/lightbox/js/lightbox.min.js"></script>
-
-    <!-- Contact Javascript File -->
-    <script src="mail/jqBootstrapValidation.min.js"></script>
-    <script src="mail/contact.js"></script>
-
-    <!-- Template Javascript -->
-    <script src="js/main.js"></script>
     
 <!-- Inclución de la plantilla footer -->
 <%@include file= "templates/footer.jsp" %>
