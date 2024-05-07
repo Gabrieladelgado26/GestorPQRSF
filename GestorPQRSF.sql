@@ -43,3 +43,20 @@ CREATE TABLE solicitud(
 
 INSERT INTO usuarios(nombre, apellido, cedula, telefono, correo, idRol)
 VALUES ('Gabriela', 'Delgado', '1081053738', '3114882004', 'gabrieladelgadoc07@gmail.com', 1)
+
+DELIMITER //
+
+CREATE PROCEDURE agregarUsuario(
+    IN p_nombre VARCHAR(150),
+    IN p_apellido TEXT,
+    IN p_cedula VARCHAR(20),
+    IN p_telefono VARCHAR(20),
+    IN p_correo INT,
+    IN p_idRol INT
+)
+BEGIN
+    INSERT INTO usuarios(nombre, apellido, cedula, telefono, correo, idRol)
+	VALUES (p_nombre, p_apellido, p_cedula, p_telefono, p_correo, p_idRol);
+END //
+
+DELIMITER ;

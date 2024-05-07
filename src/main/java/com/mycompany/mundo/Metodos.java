@@ -1,18 +1,31 @@
 
 package com.mycompany.mundo;
 
+import java.io.IOException;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.ServletContext;
 
 /**
  *
  * @author Gabriela Delgado
  */
 public class Metodos {
+    
+    public static String verificarIngreso(int cedula, String contrasena, ServletContext context) throws IOException {
+        
+        Conexion conexion = new Conexion();
+        Connection conn = conexion.establecerConexion();
+        if (conn != null) {
+
+        }
+        return null;
+    }
     
     public static int asignarId(Connection conn) throws SQLException {
         // Preparar la consulta SQL de conteo
