@@ -74,7 +74,7 @@
                                 <p class="help-block text-danger"></p>
                             </div>
                             <div>
-                                <button class="btn btn-pri py-2 px-4" type="submit" id="sendMessageButton" style="margin-top: 10px">Enviar solicitud</button>
+                                <button class="btn btn-primary py-2 px-4" type="submit" id="sendMessageButton" style="margin-top: 10px">Enviar solicitud</button>
                             </div>
                         </form>
                     </div>

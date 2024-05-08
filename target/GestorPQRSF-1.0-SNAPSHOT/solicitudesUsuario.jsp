@@ -1,5 +1,13 @@
+<%@page import="com.mycompany.mundo.Solicitud"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="com.mycompany.mundo.Metodos"%>
+<%@page import="com.mycompany.mundo.Conexion"%>
+
 <!-- Inclución de la plantilla header -->
 <%@include file= "templates/header.jsp" %>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <body>
 
@@ -10,11 +18,11 @@
         <div class="container py-3">
             <div class="row align-items-center py-4">
                 <div class="col-md-6 text-center text-md-left">
-                    <h1 class="mb-4 mb-md-0 text-primary text-uppercase">Tus solicitudes</h1>
+                    <h1 class="mb-4 mb-md-0 text-pri text-uppercase">Tus solicitudes</h1>
                 </div>
                 <div class="col-md-6 text-center text-md-right">
                     <div class="d-inline-flex align-items-center">
-                        <a class="btn btn-outline-primary" href="AgregarSolicitud.jsp">Agregar solicitud</a>
+                        <a class="btn btn-pri" href="AgregarSolicitud.jsp">Agregar solicitud</a>
                     </div>
                 </div>
             </div>
@@ -31,58 +39,20 @@
                     <h1 class="mb-4">Solicitudes</h1>
                 </div>
             </div>
-            <div class="row pb-3">
-                <div class="col-md-4 mb-4">
-                    <div class="card border-0 mb-2">
-                        <img class="card-img-top" src="img/blog-1.jpg" alt="">
-                        <div class="card-body bg-white p-4">
-                            <div class="d-flex align-items-center mb-3">
-                                <a class="btn btn-primary" href=""><i class="fa fa-link"></i></a>
-                                <h5 class="m-0 ml-3 text-truncate">Diam amet eos at no eos</h5>
-                            </div>
-                            <p>Diam amet eos at no eos sit, amet rebum ipsum clita stet, diam sea est diam eos, sit vero stet justo</p>
-                            <div class="d-flex">
-                                <small class="mr-3"><i class="fa fa-user text-primary"></i> Admin</small>
-                                <small class="mr-3"><i class="fa fa-folder text-primary"></i> Web Design</small>
-                                <small class="mr-3"><i class="fa fa-comments text-primary"></i> 15</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card border-0 mb-2">
-                        <img class="card-img-top" src="img/blog-2.jpg" alt="">
-                        <div class="card-body bg-white p-4">
-                            <div class="d-flex align-items-center mb-3">
-                                <a class="btn btn-primary" href=""><i class="fa fa-link"></i></a>
-                                <h5 class="m-0 ml-3 text-truncate">Diam amet eos at no eos</h5>
-                            </div>
-                            <p>Diam amet eos at no eos sit, amet rebum ipsum clita stet, diam sea est diam eos, sit vero stet justo</p>
-                            <div class="d-flex">
-                                <small class="mr-3"><i class="fa fa-user text-primary"></i> Admin</small>
-                                <small class="mr-3"><i class="fa fa-folder text-primary"></i> Web Design</small>
-                                <small class="mr-3"><i class="fa fa-comments text-primary"></i> 15</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card border-0 mb-2">
-                        <img class="card-img-top" src="img/blog-3.jpg" alt="">
-                        <div class="card-body bg-white p-4">
-                            <div class="d-flex align-items-center mb-3">
-                                <a class="btn btn-primary" href=""><i class="fa fa-link"></i></a>
-                                <h5 class="m-0 ml-3 text-truncate">Diam amet eos at no eos</h5>
-                            </div>
-                            <p>Diam amet eos at no eos sit, amet rebum ipsum clita stet, diam sea est diam eos, sit vero stet justo</p>
-                            <div class="d-flex">
-                                <small class="mr-3"><i class="fa fa-user text-primary"></i> Admin</small>
-                                <small class="mr-3"><i class="fa fa-folder text-primary"></i> Web Design</small>
-                                <small class="mr-3"><i class="fa fa-comments text-primary"></i> 15</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="row pb-3 justify-content-center">
+                <%
+                    Conexion tutorial = new Conexion();
+                    Metodos metodos = new Metodos();
+                    Connection conn = tutorial.establecerConexion();
+                    List<Solicitud> solicitudes = new ArrayList<>();
+                    // En caso de que se registre exitosamente
+
+                    solicitudes = metodos.obtenerSolicitudes(conn);
+
+                    String html = metodos.generarHTML(solicitudes);
+                    // Imprimir el contenido HTML
+                    out.println(html);
+                %>
                 <div class="col-md-12 mb-4">
                     <nav aria-label="Page navigation">
                         <ul class="pagination justify-content-center mb-0">
@@ -122,5 +92,38 @@
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-pri back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
+    <div class="modal fade" id="visualizar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Detalles de la solicitud</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="solicitudDetails"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        $(document).on('click', '#btnVisualizar', function () {
+            $.ajax({
+                url: 'SvVisualizar?idSolicitud=',
+                method: 'POST',
+                success: function (data) {
+                    $('#solicitudDetails').html(data);
+                    $('#visualizar').modal('show'); // Muestra el modal después de obtener los datos
+                },
+                error: function () {
+                    console.log('Error al realizar la solicitud de visualización.');
+                }
+            });
+        });
+    </script>
+    
     <!-- Inclución de la plantilla footer -->
     <%@include file= "templates/footer.jsp" %>

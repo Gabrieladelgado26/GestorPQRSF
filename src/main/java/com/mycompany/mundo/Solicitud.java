@@ -8,37 +8,34 @@ package com.mycompany.mundo;
 public class Solicitud {
     
     // Atributos de la clase
-    private int idTutorial;
+    private int idSolicitud;
     private int idPersona;
     private String tipoSolicitud;
-    private int fecha;
+    private String fecha;
     private String descripcion;
     private String archivo;
+    private String estado;
 
     // Constructor vacio
     public Solicitud() {
     }
 
-    // Constructor con parametros de la clase
-    public Solicitud(int idTutorial, int idPersona, String tipoSolicitud, int fecha, String descripcion, String archivo) {
-        this.idTutorial = idTutorial;
+    public Solicitud(int idSolicitud, int idPersona, String tipoSolicitud, String fecha, String descripcion, String archivo, String estado) {
+        this.idSolicitud = idSolicitud;
         this.idPersona = idPersona;
         this.tipoSolicitud = tipoSolicitud;
         this.fecha = fecha;
         this.descripcion = descripcion;
         this.archivo = archivo;
-    }
-    
-    /**
-     * Getters y Setters de los atributos de la clase Solicitud
-     * @return 
-     */
-    public int getIdTutorial() {
-        return idTutorial;
+        this.estado = estado;
     }
 
-    public void setIdTutorial(int idTutorial) {
-        this.idTutorial = idTutorial;
+    public int getIdSolicitud() {
+        return idSolicitud;
+    }
+
+    public void setIdSolicitud(int idSolicitud) {
+        this.idSolicitud = idSolicitud;
     }
 
     public int getIdPersona() {
@@ -57,11 +54,11 @@ public class Solicitud {
         this.tipoSolicitud = tipoSolicitud;
     }
 
-    public int getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(int fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
 
@@ -79,5 +76,13 @@ public class Solicitud {
 
     public void setArchivo(String archivo) {
         this.archivo = archivo;
-    }    
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 }

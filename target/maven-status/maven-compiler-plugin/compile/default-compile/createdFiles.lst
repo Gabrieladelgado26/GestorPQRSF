@@ -1,5 +1,6 @@
 com\mycompany\mundo\Metodos.class
 com\mycompany\mundo\Solicitud.class
+Servlets\SvVisualizar.class
 Servlets\SvAgregarUsuario.class
 com\mycompany\mundo\resources\JavaEE8Resource.class
 com\mycompany\mundo\TipoSolicitud.class

@@ -31,7 +31,7 @@
                 </div>
             </div>
             <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
-                <div class="btn btn-pri" style="width: 45px; height: 45px;">
+                <div class="btn text-pri" style="width: 45px; height: 45px;">
                     <span class="carousel-control-prev-icon mb-n2"></span>
                 </div>
             </a>
@@ -50,37 +50,37 @@
             <div class="row">
                 <div class="col-lg-5">
                     <div class="d-flex flex-column align-items-center justify-content-center bg-primary h-100 py-5 px-3">
-                        <i class="flaticon-brickwall display-1 font-weight-normal text-primary mb-3"></i>
-                        <h4 class="text-primary text-uppercase display-3 mb-3">25+</h4>
-                        <h1 class="text-primary m-0">Años de experiencia</h1>
+                        <i class="flaticon-brickwall display-1 font-weight-normal text-pri mb-3"></i>
+                        <h4 class="text-pri text-uppercase display-3 mb-3">25+</h4>
+                        <h1 class="text-pri m-0">Años de experiencia</h1>
                     </div>
                 </div>
                 <div class="col-lg-7 m-0 my-lg-5 pt-5 pb-5 pb-lg-2 pl-lg-5">
-                    <h6 class="text-primary font-weight-normal text-uppercase mb-3">Conoce sobre nosotros</h6>
+                    <h6 class="text-pri font-weight-normal text-uppercase mb-3">Conoce sobre nosotros</h6>
                     <h1 class="mb-4 section-title">Resolver tus inquietudes es nuestra prioridad</h1>
                     <p>Tu participación en esta platofarma nos permite conocer tus inquietudes y manifestaciones para que tengamos la oportunidad de fortalecer nuestro servicio y seguir en el camino hacia la excelencia operativa.</p>
                     <div class="row py-2">
                         <div class="col-sm-6">
                             <div class="d-flex align-items-center mb-4">
-                                <h1 class="flaticon font-weight-normal text-primary m-0 mr-3"></h1>
+                                <h1 class="flaticon font-weight-normal text-pri m-0 mr-3"></h1>
                                 <h5 class="text-truncate m-0">Quejas</h5>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="d-flex align-items-center mb-4">
-                                <h1 class="flaticon font-weight-normal text-primary m-0 mr-3"></h1>
+                                <h1 class="flaticon font-weight-normal text-pri m-0 mr-3"></h1>
                                 <h5 class="text-truncate m-0">Peticiones</h5>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="d-flex align-items-center mb-4">
-                                <h1 class="flaticon font-weight-normal text-primary m-0 mr-3"></h1>
+                                <h1 class="flaticon font-weight-normal text-pri m-0 mr-3"></h1>
                                 <h5 class="text-truncate m-0">Reclamos</h5>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="d-flex align-items-center mb-4">
-                                <h1 class="flaticon font-weight-normal text-primary m-0 mr-3"></h1>
+                                <h1 class="flaticon font-weight-normal text-pri m-0 mr-3"></h1>
                                 <h5 class="text-truncate m-0">Sugerencias</h5>
                             </div>
                         </div>
@@ -104,22 +104,22 @@
                 <div class="col-lg-6 p-0 pt-5 pt-lg-0">
                     <div class="owl-carousel service-carousel position-relative">
                         <div class="d-flex flex-column text-center bg-light mx-3 p-4">
-                            <h3 class="flaticon display-3 font-weight-normal text-primary mb-3"></h3>
+                            <h3 class="flaticon display-3 font-weight-normal text-pri mb-3"></h3>
                             <h5 class="mb-3">Peticiones</h5>
                             <p class="m-0">Petición, por motivos de interés general o particular, mediante el cual una persona solicita el reconocimiento de un derecho, la prestación de un servicio, etc.</p>
                         </div>
                         <div class="d-flex flex-column text-center bg-light mx-3 p-4">
-                            <h3 class="flaticon display-3 font-weight-normal text-primary mb-3"></h3>
+                            <h3 class="flaticon display-3 font-weight-normal text-pri mb-3"></h3>
                             <h5 class="mb-3">Quejas</h5>
                             <p class="m-0">Manifestación del usuario para expresar inconformidad con el actuar del funcionario, ya sea porque incumplió un deber o violó el régimen de inhabilidades.</p>
                         </div>
                         <div class="d-flex flex-column text-center bg-light mx-3 p-4">
-                            <h3 class="flaticon display-3 font-weight-normal text-primary mb-3"></h3>
+                            <h3 class="flaticon display-3 font-weight-normal text-pri mb-3"></h3>
                             <h5 class="mb-3">Reclamos</h5>
                             <p class="m-0">Es la oposición o contrariedad presentada por el usuario, para revisar y evaluar una actuación relacionada con la prestación del servicio en términos económicos.</p>
                         </div>
                         <div class="d-flex flex-column text-center bg-light mx-3 p-4">
-                            <h3 class="flaticon display-3 font-weight-normal text-primary mb-3"></h3>
+                            <h3 class="flaticon display-3 font-weight-normal text-pri mb-3"></h3>
                             <h5 class="mb-3">Sugerencia</h5>
                             <p class="m-0">Es una propuesta presentada del usuario para incidir en la mejora de un proceso cuyo objeto está relacionado con la prestación del servicio.</p>
                         </div>

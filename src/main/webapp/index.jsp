@@ -10,7 +10,7 @@
         <div id="header-carousel" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img class="w-100" src="recursos/img/carousel-2.jpg" alt=imagen>
+                    <img class="w-100" src="img/carousel-2.jpg" alt=imagen>
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3" style="max-width: 800px;">
                             <h4 class="text-primary text-uppercase font-weight-normal mb-md-3">Sistema de Peticiones, Quejas, Reclamos, Sugerencias y Felicitaciones</h4>
@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <img class="w-100" src="recursos/img/carousel-1.jpg" alt="imagen">
+                    <img class="w-100" src="img/carousel-1.jpg" alt="imagen">
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3" style="max-width: 800px;">
                             <h4 class="text-primary text-uppercase font-weight-normal mb-md-3">Sistema de Peticiones, Quejas, Reclamos, Sugerencias y Felicitaciones</h4>
@@ -50,9 +50,9 @@
             <div class="row">
                 <div class="col-lg-5">
                     <div class="d-flex flex-column align-items-center justify-content-center bg-primary h-100 py-5 px-3">
-                        <i class="flaticon-brickwall display-1 font-weight-normal text-primary mb-3"></i>
-                        <h4 class="text-primary text-uppercase display-3 mb-3">25+</h4>
-                        <h1 class="text-primary m-0">Años de experiencia</h1>
+                        <i class="flaticon-brickwall display-1 font-weight-normal text-pri mb-3"></i>
+                        <h4 class="text-pri text-uppercase display-3 mb-3">25+</h4>
+                        <h1 class="text-pri m-0">Años de experiencia</h1>
                     </div>
                 </div>
                 <div class="col-lg-7 m-0 my-lg-5 pt-5 pb-5 pb-lg-2 pl-lg-5">
