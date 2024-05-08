@@ -1,5 +1,6 @@
 package com.mycompany.mundo;
 
+import Servlets.SvEditar;
 import Servlets.SvVisualizar;
 import java.io.IOException;
 import java.sql.CallableStatement;
@@ -290,7 +291,7 @@ public class Metodos {
         }
         return solicitud;
     }
-    
+
     public String generarSolicitudHtml(Solicitud solicitud) {
         StringBuilder resultado = new StringBuilder();
 
@@ -361,6 +362,61 @@ public class Metodos {
         response.setContentType("text/html");
         // Se escribe la información del contacto en el cuerpo de la respuesta
         response.getWriter().write(formularioHTML);
+    }
 
+    public static void editarSolicitud(int idSolicitud, int idUsuario, String tipoSolicitud, String fecha, String descripcion, String archivo, String estado, HttpSession session, HttpServletResponse response, Metodos metodos) throws IOException {
+        Conexion conexion = new Conexion();
+        Connection conn = conexion.establecerConexion();
+
+        int idTipoSolicitud = 0;
+        try {
+            idTipoSolicitud = metodos.asignarIdTipoSolicitud(conn, tipoSolicitud);
+        } catch (SQLException ex) {
+            Logger.getLogger(SvEditar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        String sql = "CALL editarTutorial(?, ?, ?, ?, ?, ?, ?)";
+        try (CallableStatement stmt = conn.prepareCall(sql)) {
+            stmt.setInt(1, idUsuario);
+            stmt.setInt(1, idUsuario);
+            stmt.setInt(2, idTipoSolicitud);
+            stmt.setString(3, fecha);
+            stmt.setString(4, descripcion);
+            stmt.setString(5, archivo);
+            stmt.setString(6, estado);
+
+            stmt.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(SvEditar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            // Cerrar la conexión
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(SvEditar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        // Redirigir a alguna página de éxito o mostrar un mensaje de éxito
+        response.sendRedirect("solicitudesUsuario.jsp"); // Redirigir a una página de éxito
+
+    }
+
+    public static void eliminarSolicitud(int id, HttpSession session, HttpServletResponse response) throws IOException {
+        Conexion conexion = new Conexion();
+        Connection conn = conexion.establecerConexion();
+        if (conn != null) {
+
+            String sql = "{CALL eliminarSolicitud(?)}";
+            try (CallableStatement stmt = conn.prepareCall(sql)) {
+                stmt.setInt(1, id);
+                stmt.execute();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            String toastr = "eliminado";
+            session.setAttribute("toastr", toastr);
+        }
     }
 }

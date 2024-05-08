@@ -108,14 +108,150 @@
             </div>
         </div>
     </div>
-    
+
+    <form action="SvEditar" method="POST">
+        <div class="modal fade" id="editar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editarLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered custom-modal-size">
+                <div class="modal-content">
+                    <div class="popup">
+                        <div class="close-btn btn-close" data-bs-dismiss="modal">&times;</div>
+                        <div class="form">
+                            <h2>Editar solicitud</h2>
+                            <!-- Aquí se mostrará la información del tutorial -->
+                            <div id="solicitud-edit"></div>
+                            <hr>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-element">
+                                        <button type="submit">Editar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
     <script>
-        $(document).on('click', '#btnVisualizar', function () {
+        document.addEventListener("DOMContentLoaded", function () {
+            var button = document.getElementById("sort-button");
+            var idMostrado = 0;
+            button.addEventListener("click", function () {
+                // Realizar una solicitud al servlet
+                $.ajax({
+                    url: 'SvOrdenarTutoriales?id=' + idMostrado,
+                    method: 'POST',
+                    success: function (data) {
+                        location.reload(); // Recargar la página después de la eliminación exitosa del usuario
+                    },
+                    error: function () {
+                        console.log('Error al realizar la solicitud de visualización.');
+                    }
+                });
+            });
+        });
+
+        document.getElementById('closeBtn').addEventListener('click', function () {
+            location.reload();
+        });
+
+        function redirectToUrl(url) {
+            window.open(url, '_blank');
+        }
+
+
+        // Función para mostrar el modal de confirmación de eliminación y almacenar el nombre del usuario a eliminar
+        var idEliminar;
+        function modalEliminar(id) {
+            $('#eliminar').modal('show'); // Mostrar el modal de confirmación de eliminación
+            idEliminar = id; // Almacenar el nombre del usuario a eliminar
+        }
+
+        function eliminar() {
+            $('#eliminar').modal('hide'); // Ocultar el modal de confirmación de eliminación
+            var idEliminado = idEliminar; // Obtener el nombre del usuario a eliminar
             $.ajax({
-                url: 'SvVisualizar?idSolicitud=',
+                url: 'SvEliminarTutorial?id=' + idEliminado, // URL del servlet que maneja la solicitud de eliminación
+                method: 'POST', // Método HTTP utilizado (en este caso, POST)
+                success: function (data) {
+                    location.reload(); // Recargar la página después de la eliminación exitosa del usuario
+                },
+                error: function () {
+                    console.log('Error al realizar la solicitud de eliminación.'); // Registrar un mensaje de error en la consola en caso de error
+                }
+            });
+        }    // Función para eliminar un usuario mediante una solicitud AJAX
+
+        // Función para mostrar el modal de confirmación de eliminación y almacenar el nombre del usuario a eliminar
+        var idEliminar;
+        function modalEliminar(id) {
+            $('#eliminar').modal('show'); // Mostrar el modal de confirmación de eliminación
+            idEliminar = id; // Almacenar el nombre del usuario a eliminar
+        }
+
+        function eliminar() {
+            $('#eliminar').modal('hide'); // Ocultar el modal de confirmación de eliminación
+            var idEliminado = idEliminar; // Obtener el nombre del usuario a eliminar
+            $.ajax({
+                url: 'SvEliminarTutorial?id=' + idEliminado, // URL del servlet que maneja la solicitud de eliminación
+                method: 'POST', // Método HTTP utilizado (en este caso, POST)
+                success: function (data) {
+                    location.reload(); // Recargar la página después de la eliminación exitosa del usuario
+                },
+                error: function () {
+                    console.log('Error al realizar la solicitud de eliminación.'); // Registrar un mensaje de error en la consola en caso de error
+                }
+            });
+        }    // Función para eliminar un usuario mediante una solicitud AJAX
+
+
+        var idMostrar;
+
+        function modalMostrar(id) {
+            $('#mostrar').modal('show');
+            idMostrar = id;
+        }
+
+        function mostrar() {
+            $('#mostrar').modal('hide');
+            var idMostrado = idMostrar;
+            $.ajax({
+                url: 'SvMostrarTutorial?id=' + idMostrado,
                 method: 'POST',
                 success: function (data) {
-                    $('#solicitudDetails').html(data);
+                    $('#tutorialDetails').html(data);
+                },
+                error: function () {
+                    console.log('Error al realizar la solicitud de visualización.');
+                }
+            });
+        }
+
+
+        $(document).on('click', '#btnEditar', function () {
+            var idMostrado = $(this).attr('data-nombre'); // Obtiene el valor del atributo data-nombre del botón
+            $.ajax({
+                url: 'SvMostrarInfoEditarTutorial?idTutorial=' + idMostrado,
+                method: 'POST',
+                success: function (data) {
+                    $('#tutorial-edit').html(data);
+                    $('#editar').modal('show'); // Muestra el modal después de obtener los datos
+                },
+                error: function () {
+                    console.log('Error al realizar la solicitud de visualización.');
+                }
+            });
+        });
+
+        $(document).on('click', '#btnVisualizar', function () {
+            var idMostrado = $(this).attr('data-nombre'); // Obtiene el valor del atributo data-nombre del botón
+            $.ajax({
+                url: 'SvVisualizar?idTutorial=' + idMostrado,
+                method: 'POST',
+                success: function (data) {
+                    $('#tuto-details').html(data);
                     $('#visualizar').modal('show'); // Muestra el modal después de obtener los datos
                 },
                 error: function () {
@@ -124,6 +260,6 @@
             });
         });
     </script>
-    
+
     <!-- Inclución de la plantilla footer -->
     <%@include file= "templates/footer.jsp" %>

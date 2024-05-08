@@ -91,3 +91,28 @@ BEGIN
 END //
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE editarEstadoSolicitud(
+    IN idSolicitudParam INT,
+    IN nuevoEstado VARCHAR(100)
+)
+BEGIN
+    UPDATE solicitud
+    SET 
+        estado = nuevoEstado
+    WHERE 
+        idSolicitud = idSolicitudParam;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE eliminarSolicitud(IN solicitud_id INT)
+BEGIN
+    DELETE FROM solicitud WHERE idSolicitud = solicitud_id;
+END //
+
+DELIMITER ;
