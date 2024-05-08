@@ -1,9 +1,16 @@
+<%@page import="com.mycompany.mundo.Metodos"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.mycompany.mundo.TipoSolicitud"%>
+<%@page import="com.mycompany.mundo.Conexion"%>
+<%@page import="java.sql.Connection"%>
+
 <!-- Inclución de la plantilla header -->
 <%@include file= "templates/header.jsp" %>
 
 <body>
 
-    <%@include file= "templates/navbar.jsp" %>
+    <%@include file= "templates/navbarUsuario.jsp" %>
 
     <!-- Contact Start -->
     <div class="container-fluid bg-white">
@@ -37,29 +44,37 @@
                 <div class="col-lg-7 mb-5 my-lg-5 py-5 pl-lg-5">
                     <div class="contact-form">
                         <div id="success"></div>
-                        <form name="sentMessage" id="contactForm" novalidate="novalidate">
+                        <form action="SvAgregarSolicitud" method="post">
                             <div class="control-group">
-                                <input type="text" class="form-control p-4" id="name" placeholder="Tu nombre" required="required" data-validation-required-message="Porfavro ingrese su nombre" />
+                                <select type="text" class="form-control" id="tipoSolicitud" name="tipoSolicitud" required="required" data-validation-required-message="Porfavor ingrese el tipo de solicitud a realizar">
+                                    <option value="" disabled selected>Seleccione el tipo de solicitud</option>
+                                    <%
+                                        Metodos metodos = new Metodos();
+                                        Conexion solicitud = new Conexion();
+                                        Connection conn = solicitud.establecerConexion();
+                                        List<TipoSolicitud> tipoSolicitud = new ArrayList<>();
+                                        tipoSolicitud = metodos.obtenerTipoSolicitud(conn);
+                                        String htmls = metodos.generarHTMLTipoSolicitud(tipoSolicitud);
+                                        // Imprimir el contenido HTML
+                                        out.println(htmls);
+                                    %>
+                                </select>
                                 <p class="help-block text-danger"></p>
                             </div>
                             <div class="control-group">
-                                <input type="text" class="form-control p-4" id="apellido" placeholder="Tu apellido" required="required" data-validation-required-message="Porfavor ingrese su apellido" />
+                                <input type="date" class="form-control p-4" id="fecha" placeholder="Fecha" required="required" data-validation-required-message="Porfavor ingrese la fecha actual" />
                                 <p class="help-block text-danger"></p>
                             </div>
                             <div class="control-group">
-                                <input type="email" class="form-control p-4" id="email" placeholder="Tu email" required="required" data-validation-required-message="Porfavor ingrese su email" />
+                                <textarea class="form-control p-4" rows="6" id="descripcion" placeholder="Message" data-validation-required-message="Please enter your message"></textarea>
                                 <p class="help-block text-danger"></p>
                             </div>
                             <div class="control-group">
-                                <input type="text" class="form-control p-4" id="subject" placeholder="Subject" required="required" data-validation-required-message="Please enter a subject" />
-                                <p class="help-block text-danger"></p>
-                            </div>
-                            <div class="control-group">
-                                <textarea class="form-control p-4" rows="6" id="message" placeholder="Message" required="required" data-validation-required-message="Please enter your message"></textarea>
+                                <input type="file" class="form-control p-4" id="archivo" accept="application/pdf" data-validation-required-message="Por favor seleccione un archivo PDF" />
                                 <p class="help-block text-danger"></p>
                             </div>
                             <div>
-                                <button class="btn btn-primary py-3 px-5" type="submit" id="sendMessageButton">Enviar solicitud</button>
+                                <button class="btn btn-pri py-2 px-4" type="submit" id="sendMessageButton" style="margin-top: 10px">Enviar solicitud</button>
                             </div>
                         </form>
                     </div>
@@ -79,7 +94,7 @@
     <!-- Footer End -->
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+    <a href="#" class="btn btn-lg btn-pri back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -96,6 +111,37 @@
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
 
+    <script>
+        // Obtener los elementos del DOM
+        var mensajeTextarea = document.getElementById('message');
+        var archivoInput = document.getElementById('archivo');
+        var enviarButton = document.getElementById('sendMessageButton');
+
+        // Función para verificar si un campo está lleno o vacío
+        function campoLleno(campo) {
+            return campo.value.trim() !== '';
+        }
+
+        // Función para validar campos
+        function validarCampos() {
+            // Si el mensaje está lleno, deshabilitar la validación requerida para el archivo
+            if (campoLleno(mensajeTextarea)) {
+                archivoInput.removeAttribute('required');
+            } else {
+                archivoInput.setAttribute('required', 'required');
+            }
+            // Si el archivo está lleno, deshabilitar la validación requerida para el mensaje
+            if (campoLleno(archivoInput)) {
+                mensajeTextarea.removeAttribute('required');
+            } else {
+                mensajeTextarea.setAttribute('required', 'required');
+            }
+        }
+
+        // Llamar a la función validarCampos() cuando haya cambios en los campos
+        mensajeTextarea.addEventListener('input', validarCampos);
+        archivoInput.addEventListener('change', validarCampos);
+    </script>
 
     <!-- Inclución de la plantilla footer -->
     <%@include file= "templates/footer.jsp" %>

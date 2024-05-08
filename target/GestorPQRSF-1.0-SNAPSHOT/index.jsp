@@ -99,7 +99,7 @@
                     <h6 class="text-primary font-weight-normal text-uppercase mb-3">Conoce tus derechos</h6>
                     <h1 class="mb-4 section-title">Conoce el tipo de solicitud que deseas presentar</h1>
                     <p>Es importante que tengas en cuenta las definiciones de peticiones, quejas, reclamos y sugerencias para que puedas realizar tu solicitud sin problemas y conoscas los términos de respuesta.</p>
-                    <a href="" class="btn btn-pri mt-3 py-2 px-4">Realizar una solicitud</a>
+                    <a href="login.jsp" class="btn btn-pri mt-3 py-2 px-4">Realizar una solicitud</a>
                 </div>
                 <div class="col-lg-6 p-0 pt-5 pt-lg-0">
                     <div class="owl-carousel service-carousel position-relative">

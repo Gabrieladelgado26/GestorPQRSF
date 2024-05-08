@@ -30,19 +30,33 @@ CREATE TABLE usuarios(
     FOREIGN KEY (idRol) REFERENCES roles(idRol) ON DELETE SET NULL -- Llave foránea
 );
 
+CREATE TABLE tipoSolicitud(
+	idTipoSolicitud INT PRIMARY KEY AUTO_INCREMENT,
+    tipoSolicitud VARCHAR(20)
+);
+
+INSERT INTO tipoSolicitud(tipoSolicitud)
+VALUES ('Petición'),
+	   ('Queja'),
+       ('Reclamo'),
+       ('Sugerencia'),
+	   ('Felicitacion');
+
 -- Crear la tabla solicitud para definir el tipo de solicitud
 CREATE TABLE solicitud(
 	idSolicitud INT PRIMARY KEY AUTO_INCREMENT,  -- Identificador único autoincremental
     idUsuario INT,
-    tipoSolicitud VARCHAR(20),
+    idTipoSolicitud INT,
     fecha DATE,
     descripcion TEXT, -- Descripción de la solicitud (opcional si la persona subio un archivo)
     archivo VARCHAR(100), -- Archivo (opcional si la descripción esta llena
-    FOREIGN KEY (idUsuario) REFERENCES usuarios(idUsuario) ON DELETE SET NULL -- Llave foránea
+    estado VARCHAR(20),
+    FOREIGN KEY (idUsuario) REFERENCES usuarios(idUsuario) ON DELETE SET NULL, -- Llave foránea
+    FOREIGN KEY (idTipoSolicitud) REFERENCES tipoSolicitud(idTipoSolicitud) ON DELETE SET NULL -- Llave foránea
 );
 
 INSERT INTO usuarios(nombre, apellido, cedula, telefono, correo, idRol)
-VALUES ('Gabriela', 'Delgado', '1081053738', '3114882004', 'gabrieladelgadoc07@gmail.com', 1)
+VALUES ('Gabriela', 'Delgado', '1081053738', '3114882004', 'gabrieladelgadoc07@gmail.com', 1);
 
 DELIMITER //
 
@@ -57,6 +71,23 @@ CREATE PROCEDURE agregarUsuario(
 BEGIN
     INSERT INTO usuarios(nombre, apellido, cedula, telefono, correo, idRol)
 	VALUES (p_nombre, p_apellido, p_cedula, p_telefono, p_correo, p_idRol);
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE agregarSolicitud(
+    IN p_idUsuario INT,
+    IN p_idTipoSolicitud INT,
+    IN p_fecha DATE,
+    IN p_descripcion TEXT,
+    IN p_archivo VARCHAR(100),
+    IN p_estado VARCHAR(20)
+)
+BEGIN
+    INSERT INTO solicitud(idUsuario, idTipoSolicitud, fecha, descripcion, archivo, estado)
+	VALUES (p_idUsuario, p_idTipoSolicitud, p_fecha, p_descripcion, p_archivo, p_estado);
 END //
 
 DELIMITER ;
