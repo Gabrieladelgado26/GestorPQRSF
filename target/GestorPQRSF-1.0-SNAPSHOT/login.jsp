@@ -29,9 +29,9 @@
                             <div class="col-md-8">
                                 <div class="mb-4">
                                     <h3>Iniciar sesión</h3>
-                                    <p class="mb-4" style="margin-top: 8px">Inicia sesión para realizar todas las solicitudes ue necesites.</p>
+                                    <p class="mb-4" style="margin-top: 8px">Inicia sesión para realizar todas las solicitudes que necesites.</p>
                                 </div>
-                                <a type="button" class="ml-auto forgot-pass" href="solicitudesUsuario.jsp" style="margin-bottom: 10px; padding-left: 240px" data-bs-toggle="modal" data-bs-target="#modalAgregar">Registrate aqui!</a>
+                                <a type="button" class="ml-auto forgot-pass" href="registro.jsp" style="margin-bottom: 10px; padding-left: 240px" data-bs-toggle="modal" data-bs-target="#modalAgregar">Registrate aqui!</a>
                                 <br><form action="SvLogin" method="post">
                                     <div class="form-group first">
                                         <label for="usuario">Cedula de usuario</label>
@@ -47,7 +47,7 @@
                                             <div class="control__indicator"></div>
                                         </label>
                                     </div>
-                                    <input type="submit" value="Iniciar sesión" class="btn btn-block btn-primary">
+                                    <input type="button" onclick="window.location.href='solicitudesUsuario.jsp'" value="Iniciar sesión" class="btn btn-block btn-primary">
                                 </form>
                                 <div class="social-login" style="margin-top: 20px">
                                     <a href="#" class="facebook">
@@ -67,7 +67,39 @@
             </div>
         </div>
 
-        <!-- Modal para agregar un usuario -->
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Launch demo modal
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script src="recursos/login/js/jquery-3.3.1.min.js"></script>
+        <script src="recursos/login/js/popper.min.js"></script>
+        <script src="recursos/login/js/bootstrap.min.js"></script>
+        <script src="recursos/login/js/main.js"></script>
+
+    </body>
+</html>
+
+<!-- Modal para agregar un usuario -->
         <div class="modal fade" id="modalAgregar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered custom-modal-size">
                 <div class="modal-content">
@@ -122,11 +154,3 @@
                 </div>
             </div>
         </div>
-        
-        <script src="recursos/login/js/jquery-3.3.1.min.js"></script>
-        <script src="recursos/login/js/popper.min.js"></script>
-        <script src="recursos/login/js/bootstrap.min.js"></script>
-        <script src="recursos/login/js/main.js"></script>
-
-    </body>
-</html>

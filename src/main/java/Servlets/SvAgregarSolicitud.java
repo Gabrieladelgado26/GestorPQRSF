@@ -4,6 +4,10 @@ import com.mycompany.mundo.Metodos;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -36,7 +40,14 @@ public class SvAgregarSolicitud extends HttpServlet {
         // Obtener los parámetros del formulario
         int idUsuario = 1;
         String tipoSolicitud = request.getParameter("tipoSolicitud");
-        String fecha = request.getParameter("fecha");
+        // Convertir la cadena de texto de la fecha a un objeto java.sql.Date
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date fecha = null;
+        try {
+            fecha = new Date(sdf.parse(request.getParameter("fecha")).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace(); // Manejar la excepción adecuadamente
+        }
         String descripcion = request.getParameter("descripcion");
         String archivo = request.getParameter("archivo");
         String estado = "Por revisar";

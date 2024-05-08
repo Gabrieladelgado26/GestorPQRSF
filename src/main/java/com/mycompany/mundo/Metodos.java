@@ -5,6 +5,7 @@ import Servlets.SvVisualizar;
 import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -140,7 +141,7 @@ public class Metodos {
         return -1;
     }
 
-    public static void SvAgregarSolicitud(int idUsuario, String tipoSolicitud, String fecha, String descripcion, String archivo, String estado, HttpSession session, HttpServletResponse response) throws IOException {
+    public static void SvAgregarSolicitud(int idUsuario, String tipoSolicitud, Date fecha, String descripcion, String archivo, String estado, HttpSession session, HttpServletResponse response) throws IOException {
         Conexion conexion = new Conexion();
         Connection conn = conexion.establecerConexion();
         if (conn != null) {
@@ -149,14 +150,14 @@ public class Metodos {
                 // Llamar al procedimiento almacenado
                 CallableStatement stmt = conn.prepareCall("{call agregarSolicitud(?, ?, ?, ?, ?, ?)}");
 
-                int idTipoSolicidud = Metodos.asignarIdTipoSolicitud(conn, tipoSolicitud);
+                int idTipoSolicitud = Metodos.asignarIdTipoSolicitud(conn, tipoSolicitud);
 
-                System.out.println("El idSolicitud es: " + idTipoSolicidud);
+                System.out.println("El idSolicitud es: " + idTipoSolicitud);
 
                 // Establecer parámetros del procedimiento almacenado
                 stmt.setInt(1, idUsuario);
-                stmt.setInt(2, idTipoSolicidud);
-                stmt.setString(3, fecha);
+                stmt.setInt(2, idTipoSolicitud);
+                stmt.setDate(3, fecha);
                 stmt.setString(4, descripcion);
                 stmt.setString(5, archivo);
                 stmt.setString(6, estado);
@@ -191,15 +192,11 @@ public class Metodos {
             int idSolicitud = rs.getInt("idSolicitud");
             int idPersona = rs.getInt("idSolicitud");
             String tipoSolicitud = rs.getString("tipoSolicitud");
-            String fecha = rs.getString("fecha");
+            Date fecha = rs.getDate("fecha");
             String descripcion = rs.getString("descripcion");
             String archivo = rs.getString("archivo");
             String estado = rs.getString("estado");
 
-            // Verificar si la categoría es null y manejarlo en consecuencia
-            if (fecha == null) {
-                fecha = "08/05/2024";
-            }
             if (descripcion == null) {
                 descripcion = "Diam amet eos at no eos sit, amet rebum ipsum clita stet, diam sea est diam eos, sit vero stet justo";
             }
@@ -234,10 +231,10 @@ public class Metodos {
                         .append("<small class=\"mr-3\"><i class=\"fa fa-folder text-primary\"></i>Archivo: ").append(solicitud.getArchivo()).append("</small>")
                         .append("<small class=\"mr-3\"><i class=\"fa fa-comments text-primary\"></i>Fecha: ").append(solicitud.getFecha()).append("</small>")
                         .append("</div>")
-                        .append("<div class=\"justify-content-center\">")
-                        .append("<a href=\"#\" id=\"btnVisualizar\" style=\"margin-top: 20px; margin-right: 5px;\" class=\"btn btn-sm btn-outline-primary\" data-bs-toggle=\"modal\" data-bs-target=\"#visualizar\" data-nombre=\"" + solicitud.getIdSolicitud() + "\"><i class=\"fa-solid fa-eye fa-sm\"></i></a>")
-                        .append("<a href=\"#\" id=\"btnEditar\" style=\"margin-top: 20px; margin-right: 5px;\" class=\"btn btn-sm btn-outline-success\" data-nombre=\"" + solicitud.getIdSolicitud() + "\" data-bs-toggle=\"modal\" data-bs-target=\"#editar\"><i class=\"fa-solid fa-pen-clip fa-sm\"></i></a>")
-                        .append("<a href=\"#\" style=\"margin-top: 20px;\" class=\"btn btn-sm btn-outline-danger\" onclick=\"modalEliminar('" + solicitud.getIdSolicitud() + "')\" data-nombre=\"" + solicitud.getIdSolicitud() + "\"><i class=\"fa-solid fa-trash fa-sm\"></i></a>")
+                        .append("<div class=\"d-flex justify-content-center\">")
+                        .append("<a href=\"#\" style=\"margin-top: 20px; margin-right: 5px;\" class=\"btn btn-sm btn-outline-primary\"  data-nombre=\"" + solicitud.getIdSolicitud() + "\"data-bs-toggle=\"modal\" data-bs-target=\"#visualizar\"><i class=\"fa-solid fa-eye fa-sm\"></i></a>")
+                        .append("<a href=\"#\" style=\"margin-top: 20px; margin-right: 5px;\" class=\"btn btn-sm btn-outline-success\" data-nombre=\"" + solicitud.getIdSolicitud() + "\" data-bs-toggle=\"modal\" data-bs-target=\"#editar\"><i class=\"fa-solid fa-pen-clip fa-sm\"></i></a>")
+                        .append("<a href=\"#\" style=\"margin-top: 20px;\" class=\"btn btn-sm btn-outline-danger\" onclick=\"modalEliminar('" + solicitud.getIdSolicitud() + "')\" data-nombre=\"" + solicitud.getIdSolicitud() +  "data-bs-target=\"#eliminar\" \"><i class=\"fa-solid fa-trash fa-sm\"></i></a>")
                         .append("</div>")
                         .append("</div>")
                         .append("</div>")
@@ -267,13 +264,10 @@ public class Metodos {
                 solicitud.setIdPersona(rs.getInt("idUsuario"));
                 solicitud.setTipoSolicitud(rs.getString("tipoSolicitud"));
 
-                String fecha = rs.getString("fecha");
+                Date fecha = rs.getDate("fecha");
                 String descripcion = rs.getString("descripcion");
                 String archivo = rs.getString("archivo");
                 // Verificar si la categoría es null y manejarlo en consecuencia
-                if (fecha == null) {
-                    fecha = "08/05/2024";
-                }
                 if (descripcion == null) {
                     descripcion = "Diam amet eos at no eos sit, amet rebum ipsum clita stet, diam sea est diam eos, sit vero stet justo";
                 }
@@ -411,12 +405,10 @@ public class Metodos {
             try (CallableStatement stmt = conn.prepareCall(sql)) {
                 stmt.setInt(1, id);
                 stmt.execute();
+                System.out.println("Si llegue");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
-            String toastr = "eliminado";
-            session.setAttribute("toastr", toastr);
         }
     }
 }

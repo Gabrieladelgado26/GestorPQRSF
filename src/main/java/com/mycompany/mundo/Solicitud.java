@@ -1,6 +1,8 @@
 
 package com.mycompany.mundo;
 
+import java.sql.Date;
+
 /**
  *
  * @author Gabriela Delgado
@@ -11,7 +13,7 @@ public class Solicitud {
     private int idSolicitud;
     private int idPersona;
     private String tipoSolicitud;
-    private String fecha;
+    private Date fecha;
     private String descripcion;
     private String archivo;
     private String estado;
@@ -20,7 +22,7 @@ public class Solicitud {
     public Solicitud() {
     }
 
-    public Solicitud(int idSolicitud, int idPersona, String tipoSolicitud, String fecha, String descripcion, String archivo, String estado) {
+    public Solicitud(int idSolicitud, int idPersona, String tipoSolicitud, Date fecha, String descripcion, String archivo, String estado) {
         this.idSolicitud = idSolicitud;
         this.idPersona = idPersona;
         this.tipoSolicitud = tipoSolicitud;
@@ -54,11 +56,11 @@ public class Solicitud {
         this.tipoSolicitud = tipoSolicitud;
     }
 
-    public String getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(String fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 
@@ -85,4 +87,6 @@ public class Solicitud {
     public void setEstado(String estado) {
         this.estado = estado;
     }
+    
+    
 }

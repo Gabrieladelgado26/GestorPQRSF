@@ -36,7 +36,7 @@ public class SvEliminar extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
         System.out.println("Corriendo metodo para eliminar");
-        int id = Integer.parseInt(request.getParameter("id"));
+        int id = Integer.parseInt(request.getParameter("idSolicitudEliminar"));
         HttpSession session = request.getSession();
         
         metodos.eliminarSolicitud(id, session, response);

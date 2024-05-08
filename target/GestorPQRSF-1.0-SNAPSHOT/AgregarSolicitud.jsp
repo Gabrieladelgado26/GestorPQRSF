@@ -62,15 +62,15 @@
                                 <p class="help-block text-danger"></p>
                             </div>
                             <div class="control-group">
-                                <input type="date" class="form-control p-4" id="fecha" placeholder="Fecha" required="required" data-validation-required-message="Porfavor ingrese la fecha actual" />
+                                <input type="date" class="form-control p-4" id="fecha" name="fecha" placeholder="Fecha" required="required" data-validation-required-message="Porfavor ingrese la fecha actual" />
                                 <p class="help-block text-danger"></p>
                             </div>
                             <div class="control-group">
-                                <textarea class="form-control p-4" rows="6" id="descripcion" placeholder="Message" data-validation-required-message="Please enter your message"></textarea>
+                                <textarea class="form-control p-4" rows="6" id="descripcion" name="descripcion" placeholder="Message" data-validation-required-message="Please enter your message"></textarea>
                                 <p class="help-block text-danger"></p>
                             </div>
                             <div class="control-group">
-                                <input type="file" class="form-control p-4" id="archivo" accept="application/pdf" data-validation-required-message="Por favor seleccione un archivo PDF" />
+                                <input type="file" class="form-control p-4" id="archivo" name="archivo" accept="application/pdf" data-validation-required-message="Por favor seleccione un archivo PDF" />
                                 <p class="help-block text-danger"></p>
                             </div>
                             <div>
@@ -141,7 +141,14 @@
         // Llamar a la función validarCampos() cuando haya cambios en los campos
         mensajeTextarea.addEventListener('input', validarCampos);
         archivoInput.addEventListener('change', validarCampos);
-    </script>
 
-    <!-- Inclución de la plantilla footer -->
-    <%@include file= "templates/footer.jsp" %>
+
+        // Obtener la fecha actual en formato "yyyy-mm-dd"
+        var currentDate = new Date().toISOString().slice(0, 10);
+        // Establecer el valor del campo de entrada de fecha
+        document.getElementById('fecha').value = currentDate;
+    </script>
+</script>
+
+<!-- Inclución de la plantilla footer -->
+<%@include file= "templates/footer.jsp" %>

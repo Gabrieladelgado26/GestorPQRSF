@@ -10,7 +10,7 @@
         <div id="header-carousel" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img class="w-100" src="recursos/img/carousel-2.jpg" alt=imagen>
+                    <img class="w-100" src="img/carousel-2.jpg" alt=imagen>
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3" style="max-width: 800px;">
                             <h4 class="text-primary text-uppercase font-weight-normal mb-md-3">Sistema de Peticiones, Quejas, Reclamos, Sugerencias y Felicitaciones</h4>
@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <img class="w-100" src="recursos/img/carousel-1.jpg" alt="imagen">
+                    <img class="w-100" src="img/carousel-1.jpg" alt="imagen">
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3" style="max-width: 800px;">
                             <h4 class="text-primary text-uppercase font-weight-normal mb-md-3">Sistema de Peticiones, Quejas, Reclamos, Sugerencias y Felicitaciones</h4>
