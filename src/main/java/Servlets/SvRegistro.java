@@ -86,6 +86,7 @@ public class SvRegistro extends HttpServlet {
         String rol = "Usuario";
 
         Metodos.agregarUsuario(nombre, apellido, cedula, telefono, correo, contrasena, rol, session, response);
+       // Metodos.enviarCorreoInsertarPQRS(nombre, apellido, cedula, telefono, correo);
     }
     
     /**

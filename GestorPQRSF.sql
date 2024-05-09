@@ -106,3 +106,18 @@ BEGIN
 END //
 
 DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE editarSolicitud(
+    IN p_idSolicitud INT,
+    IN p_idTipoSolicitud INT,
+    IN p_fecha DATE,
+    IN p_descripcion VARCHAR(255),
+    IN p_archivo VARCHAR(100)
+)
+BEGIN
+    UPDATE solicitud
+    SET idTipoSolicitud = p_idTipoSolicitud, fecha = p_fecha, descripcion = p_descripcion, archivo = p_archivo
+    WHERE idSolicitud = p_idSolicitud;
+END //
+DELIMITER ;

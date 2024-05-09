@@ -35,6 +35,7 @@ public class SvVisualizar extends HttpServlet {
             throws ServletException, IOException {
         
         processRequest(request, response);
+        
         System.out.println("Corriendo metodo para mostrar informacion de la solicitud a visualizar");
 
         int idSolicitud = Integer.parseInt(request.getParameter("idSolicitud"));

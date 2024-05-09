@@ -3,6 +3,7 @@ package com.mycompany.mundo;
 import Servlets.SvEditar;
 import Servlets.SvVisualizar;
 import java.io.IOException;
+import java.net.Authenticator;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
@@ -16,6 +17,10 @@ import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.util.Properties;
+
 
 /**
  *
@@ -48,6 +53,7 @@ public class Metodos {
                 conn.close();
 
                 System.out.println("Redireccionando a login.jsp");
+                enviarCorreoInsertarPQRS(nombre, apellido, cedula, telefono, correo);
                 response.sendRedirect("login.jsp");
 
             } catch (SQLException e) {
@@ -211,40 +217,38 @@ public class Metodos {
         return solicitudes;
     }
 
-    public static String generarSolicitudesUsuario(List<Solicitud> solicitudes, int idUsuario) {
-        StringBuilder html = new StringBuilder();
+    public static void editarSolicitud(int p_idSolicitud, int p_tipoSolicitud, Date p_fecha, String p_descripcion, String p_archivo) {
+        PreparedStatement pstmt = null;
+        Conexion conexion = new Conexion();
+        Connection conn = conexion.establecerConexion();
+        try {
+            // Preparar la consulta SQL
+            String sql = "UPDATE solicitud SET tipoSolicitud =?, fecha =?, descripcion =?, archivo =? WHERE idSolicitud =?";
+            pstmt = conn.prepareStatement(sql);
+            // Establecer los parámetros de la consulta
+            pstmt.setInt(1, p_tipoSolicitud);
+            pstmt.setDate(2, p_fecha);
+            pstmt.setString(3, p_descripcion);
+            pstmt.setString(4, p_archivo);
+            pstmt.setInt(5, p_idSolicitud);
+            // Ejecutar la consulta
+            pstmt.executeUpdate();
 
-        if (solicitudes.isEmpty()) {
-            html.append("<br><div class=\"no-tutorials\">No hay solicitudes registradas</div></br>");
-        } else {
-            for (Solicitud solicitud : solicitudes) {
-                // Verificar si la solicitud pertenece al usuario actual
-                if (solicitud.getIdPersona() == idUsuario) {
-                    html.append("<div class=\"col-md-4 mb-4\">")
-                            .append("<div class=\"card border-0 mb-2\">")
-                            .append("<div class=\"card-body bg-white p-4\">")
-                            .append("<div class=\"d-flex align-items-center mb-3\">")
-                            .append("<a class=\"btn btn-pri\" href=\"\"><i class=\"fa fa-link\"></i></a>")
-                            .append("<h5 class=\"m-0 ml-3 text-truncate\">").append(solicitud.getTipoSolicitud()).append("</h5>")
-                            .append("</div>")
-                            .append("<p>").append(solicitud.getDescripcion()).append("</p>")
-                            .append("<div class=\"d-flex\">")
-                            .append("<small class=\"mr-3\"><i class=\"fa fa-user text-primary\"></i>Id usuario: ").append(solicitud.getIdPersona()).append("</small>")
-                            .append("<small class=\"mr-3\"><i class=\"fa fa-folder text-primary\"></i>Archivo: ").append(solicitud.getArchivo()).append("</small>")
-                            .append("<small class=\"mr-3\"><i class=\"fa fa-comments text-primary\"></i>Fecha: ").append(solicitud.getFecha()).append("</small>")
-                            .append("</div>")
-                            .append("<div class=\"d-flex justify-content-center\">")
-                            .append("<a href=\"#\" style=\"margin-top: 20px; margin-right: 5px;\" class=\"btn btn-sm btn-outline-primary\"  data-nombre=\"" + solicitud.getIdSolicitud() + "\"data-bs-toggle=\"modal\" data-bs-target=\"#visualizar\"><i class=\"fa-solid fa-eye fa-sm\"></i></a>")
-                            .append("<a href=\"#\" style=\"margin-top: 20px; margin-right: 5px;\" class=\"btn btn-sm btn-outline-success\" data-nombre=\"" + solicitud.getIdSolicitud() + "\" data-bs-toggle=\"modal\" data-bs-target=\"#editar\"><i class=\"fa-solid fa-pen-clip fa-sm\"></i></a>")
-                            .append("<a href=\"#\" style=\"margin-top: 20px;\" class=\"btn btn-sm btn-outline-danger\" onclick=\"modalEliminar('" + solicitud.getIdSolicitud() + "')\" data-nombre=\"" + solicitud.getIdSolicitud() + "data-bs-target=\"#eliminar\" \"><i class=\"fa-solid fa-trash fa-sm\"></i></a>")
-                            .append("</div>")
-                            .append("</div>")
-                            .append("</div>")
-                            .append("</div>");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Cerrar la conexión y liberar los recursos
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
                 }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
-        return html.toString();
     }
 
     public Solicitud buscarSolicitudPorId(int id, Connection conn) {
@@ -444,4 +448,53 @@ public class Metodos {
 
         return datosUsuario;
     }
+   public static void enviarCorreoInsertarPQRS(String nombre,String apellido,String cedula,String telefono,String correo) {
+    // Configuración del servidor de correo
+    String correoRemitente = "gestorpqrsf@gmail.com";
+    String passwordRemitente = "z x g f y n n f i w v t a c d d";
+    String host = "smtp.gmail.com";
+    int puerto = 587;
+
+    // Propiedades de la sesión
+    Properties props = new Properties();
+    props.put("mail.smtp.auth", "true");
+    props.put("mail.smtp.starttls.enable", "true");
+    props.put("mail.smtp.host", host);
+    props.put("mail.smtp.port", puerto);
+
+    // Autenticación
+    Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+        protected PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(correoRemitente, passwordRemitente);
+        }
+    });
+
+    try {
+        // Crear mensaje
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(correoRemitente));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(correo));
+        message.setSubject("Registro Exitoso en el Sistema de PQRSF");
+
+        // Construir el texto del mensaje con los datos del formulario
+        String textoMensaje = "Estimado/a, " + nombre + "<br><br> Su registro se ha realizado correctamente en nuestro sistema.<br><br>";
+        textoMensaje += "<h2>Detalles deL registro:</h2>\n";
+        textoMensaje += "<p><strong>Nombre:</strong> " + nombre + "</p>\n";
+        textoMensaje += "<p><strong>Apellido:</strong> " + apellido + "</p>\n";
+        textoMensaje += "<p><strong>Cedula:</strong> " + cedula + "</p>\n";
+        textoMensaje += "<p><strong>Teléfono:</strong> " + telefono + "</p>\n";
+        textoMensaje += "<p><strong>Email:</strong> " + correo + "</p>\n";
+
+        textoMensaje += "<br><p>Atentamente,<br>El equipo de soporte.</p>\n";
+        message.setContent(textoMensaje, "text/html; charset=utf-8");
+
+        // Enviar correo
+        Transport.send(message);
+
+        System.out.println("Correo de registro exitoso enviado a: " + correo);
+    } catch (MessagingException e) {
+        System.out.println("Error al enviar el correo de registro exitoso: " + e.getMessage());
+        e.printStackTrace();
+    }
+}
 }

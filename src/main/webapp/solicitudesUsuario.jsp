@@ -129,59 +129,64 @@
                                     <div class="mr-6"><i class="fa fa-user text-primary"></i>  Estado: <%= estado%></div>
                                 </div>
                                 <div class="d-flex justify-content-center">
-                                    <a href="#" style="margin-top: 20px; margin-right: 5px;" class="btn btn-sm btn-outline-primary" data-nombre="<%= idSolicitud%>" data-bs-toggle="modal" data-bs-target="#visualizar"><i class="fa-solid fa-eye fa-sm"></i></a>
-                                    <a href="#" style="margin-top: 20px; margin-right: 5px;" class="btn btn-sm btn-outline-success" data-nombre="<%= idSolicitud%>" data-bs-toggle="modal" data-bs-target="#editar"><i class="fa-solid fa-pen-clip fa-sm"></i></a>
-                                    <a href="#" style="margin-top: 20px;" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminar" onclick="setearIdSolicitud(<%= idSolicitud%>);"><i class="fa-solid fa-trash fa-sm"></i></a>
+                                    <a href="#" id="btnVisualizar" style="margin-top: 20px; margin-right: 5px;" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#visualizar" data-nombre=" <%= idSolicitud%>"><i class="fas fa-eye"></i></a>
+                                    <a href="#" style="margin-top: 20px; margin-right: 5px;" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#editar" title="Editar"
+                                       data-idSolicitud="<%= idSolicitud%>"
+                                       data-fecha="<%= fecha%>"
+                                       data-descripcion="<%= descripcion%>">
+                                        <i class="fas fa-edit"></i> 
+                                    </a>
+                                    <a href="#" style="margin-top: 20px;" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminar" onclick="setearIdSolicitud(<%= idSolicitud%>);"><i class="fas fa-trash"></i></a>
                                 </div>
                             </div>
-                            <%
+                        </div>
+                    </div>
+                    <%
+                                }
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            } finally {
+                                // Close the connection and resources
+                                try {
+                                    if (rs != null) {
+                                        rs.close();
+                                    }
+                                    if (pstmt != null) {
+                                        pstmt.close();
+                                    }
+                                    if (conn != null) {
+                                        conn.close();
                                     }
                                 } catch (SQLException e) {
                                     e.printStackTrace();
-                                } finally {
-                                    // Close the connection and resources
-                                    try {
-                                        if (rs != null) {
-                                            rs.close();
-                                        }
-                                        if (pstmt != null) {
-                                            pstmt.close();
-                                        }
-                                        if (conn != null) {
-                                            conn.close();
-                                        }
-                                    } catch (SQLException e) {
-                                        e.printStackTrace();
-                                    }
                                 }
-                            %>
-                        </div>
-                    </div>
-                    <% }%>
-                    <div class="col-md-12 mb-4">
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination justify-content-center mb-0">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                        <span class="sr-only">Previous</span>
-                                    </a>
-                                </li>
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                        <span class="sr-only">Next</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
+                            }
+                        } %>
+                </div>
+                <div class="col-md-12 mb-4">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center mb-0">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>
+
         <!-- Blog End -->
 
         <!-- Footer Start -->
@@ -217,32 +222,102 @@
             </div>
         </div>
 
-        <form action="SvEditar" method="POST">
-            <div class="modal fade" id="editar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editarLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered custom-modal-size">
-                    <div class="modal-content">
-                        <div class="popup">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Editar solicitud</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="form">
-                                <!-- Aquí se mostrará la información del tutorial -->
-                                <div id="solicitud-edit"></div>
+
+        <div class="modal fade" id="editar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editarLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered custom-modal-size">
+                <div class="modal-content">
+                    <div class="popup">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="editarLabel">Editar solicitud</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="SvEditar" method="POST" id="editForm">
+                                <div class="mb-3" hidden>
+                                    <label for="idSolicitud" class="col-form-label">ID Solicitud:</label>
+                                    <input type="text" class="form-control" id="idSolicitud" name="idSolicitud" placeholder="ID de la solicitud" readonly required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="tipoSolicitud" class="col-form-label">Tipo de Solicitud:</label>
+                                    <select class="form-control" name="tipoSolicitud" id="tipoSolicitud" required>
+                                        <option value="" selected disabled>Seleccione el tipo de solicitud</option>
+                                        <%
+                                            try {
+                                                conn = conexion.establecerConexion();
+                                                String sql = "SELECT idTipoSolicitud, tipoSolicitud FROM tipoSolicitud";
+                                                pstmt = conn.prepareStatement(sql);
+                                                rs = pstmt.executeQuery();
+
+                                                while (rs.next()) {
+                                                    int idTipoSolicitud = rs.getInt("idTipoSolicitud");
+                                                    String nombre = rs.getString("tipoSolicitud");
+                                        %>
+                                        <option value="<%= idTipoSolicitud%>"><%= nombre%></option>
+                                        <%
+                                                }
+                                            } catch (SQLException e) {
+                                                e.printStackTrace();
+                                            } finally {
+                                                // Cierra la conexión y los recursos
+                                                try {
+                                                    if (rs != null) {
+                                                        rs.close();
+                                                    }
+                                                    if (pstmt != null) {
+                                                        pstmt.close();
+                                                    }
+                                                    if (conn != null) {
+                                                        conn.close();
+                                                    }
+                                                } catch (SQLException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        %>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="fecha" class="col-form-label">Fecha: </label>
+                                    <input type="date" class="form-control" id="fecha" name="fecha" rows="3" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="descripcion" class="col-form-label">Descripcion: </label>
+                                    <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="archivo" class="col-form-label">Archivo:</label>
+                                    <input type="file" class="form-control" id="archivo" name="archivo">
+                                </div>
                                 <hr>
                                 <div class="row">
                                     <div class="col">
                                         <div class="form-element d-flex justify-content-center">
-                                            <button type="submit" class="btn btn-secondary" style="margin-bottom: 10px">Editar</button>
+                                            <button type="submit" class="btn btn-primary" style="margin-bottom: 10px">Guardar cambios</button>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
+
+        <script>
+            $('#editar').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var idSolicitud = button.data('idSolicitud'); // Obtener el ID de la solicitud del botón
+                var fecha = button.data('fecha'); // Obtener la fecha del botón
+                var descripcion = button.data('descripcion'); // Obtener la descripción del botón
+                                
+                // Establecer valores en los campos del formulario
+                var modal = $(this);
+                modal.find('.modal-body #idSolicitud').val(idSolicitud);
+                modal.find('.modal-body #fecha').val(fecha);
+                modal.find('.modal-body #descripcion').val(descripcion);
+
+            });
+        </script>
 
         <div class="modal fade" id="eliminar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="eliminarLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -274,6 +349,7 @@
         </script>
 
         <script>
+
             document.addEventListener("DOMContentLoaded", function () {
                 var button = document.getElementById("sort-button");
                 var idMostrado = 0;
@@ -300,97 +376,21 @@
                 window.open(url, '_blank');
             }
 
-            function eliminar() {
-                $('#eliminar').modal('hide'); // Ocultar el modal de confirmación de eliminación
-                var idEliminado = $('#idSolicitudEliminar').val(); // Obtener la ID de la solicitud desde el campo oculto
-                $.ajax({
-                    url: 'SvEliminar?id=' + idEliminado, // URL del servlet que maneja la solicitud de eliminación
-                    method: 'POST', // Método HTTP utilizado (en este caso, POST)
-                    success: function (data) {
-                        location.reload(); // Recargar la página después de la eliminación exitosa de la solicitud
-                    },
-                    error: function () {
-                        console.log('Error al realizar la solicitud de eliminación.'); // Registrar un mensaje de error en la consola en caso de error
-                    }
-                });
-            }
-
-
-            // Función para mostrar el modal de confirmación de eliminación y almacenar el nombre del usuario a eliminar
-            var idEliminar;
-            function modalEliminar(id) {
-                $('#eliminar').modal('show'); // Mostrar el modal de confirmación de eliminación
-                idEliminar = id; // Almacenar el nombre del usuario a eliminar
-            }
-
-            function eliminar() {
-                $('#eliminar').modal('hide'); // Ocultar el modal de confirmación de eliminación
-                var idEliminado = idEliminar; // Obtener el nombre del usuario a eliminar
-                $.ajax({
-                    url: 'SvEliminar?id=' + idEliminado, // URL del servlet que maneja la solicitud de eliminación
-                    method: 'POST', // Método HTTP utilizado (en este caso, POST)
-                    success: function (data) {
-                        location.reload(); // Recargar la página después de la eliminación exitosa del usuario
-                    },
-                    error: function () {
-                        console.log('Error al realizar la solicitud de eliminación.'); // Registrar un mensaje de error en la consola en caso de error
-                    }
-                });
-            }    // Función para eliminar un usuario mediante una solicitud AJAX
-
-
-            var idMostrar;
-
-            function modalMostrar(id) {
-                $('#mostrar').modal('show');
-                idMostrar = id;
-            }
-
-            function mostrar() {
-                $('#mostrar').modal('hide');
-                var idMostrado = idMostrar;
-                $.ajax({
-                    url: 'SvMostrarTutorial?id=' + idMostrado,
-                    method: 'POST',
-                    success: function (data) {
-                        $('#tutorialDetails').html(data);
-                    },
-                    error: function () {
-                        console.log('Error al realizar la solicitud de visualización.');
-                    }
-                });
-            }
-
-
-            $(document).on('click', '#btnEditar', function () {
-                var idMostrado = $(this).attr('data-nombre'); // Obtiene el valor del atributo data-nombre del botón
-                $.ajax({
-                    url: 'SvMostrarInfoEditarTutorial?idTutorial=' + idMostrado,
-                    method: 'POST',
-                    success: function (data) {
-                        $('#tutorial-edit').html(data);
-                        $('#editar').modal('show'); // Muestra el modal después de obtener los datos
-                    },
-                    error: function () {
-                        console.log('Error al realizar la solicitud de visualización.');
-                    }
-                });
-            });
-
             $(document).on('click', '#btnVisualizar', function () {
                 var idMostrado = $(this).attr('data-nombre'); // Obtiene el valor del atributo data-nombre del botón
                 $.ajax({
                     url: 'SvVisualizar?idSolicitud=' + idMostrado,
                     method: 'POST',
                     success: function (data) {
-                        $('#visualizar').modal('show'); // Muestra el modal después de obtener los datos
                         $('#solicitudDetails').html(data);
+                        $('#visualizar').modal('show'); // Muestra el modal después de obtener los datos
                     },
                     error: function () {
                         console.log('Error al realizar la solicitud de visualización.');
                     }
                 });
             });
+
         </script>
 
         <!-- Inclución de la plantilla footer -->

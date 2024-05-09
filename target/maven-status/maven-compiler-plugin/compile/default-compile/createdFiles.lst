@@ -5,6 +5,7 @@ com\mycompany\mundo\JAXRSConfiguration.class
 Servlets\SvAgregarSolicitud.class
 Servlets\SvEditar.class
 Servlets\SvLogin.class
+com\mycompany\mundo\Metodos$1.class
 Servlets\SvVisualizar.class
 com\mycompany\mundo\resources\JavaEE8Resource.class
 Servlets\SvRegistro.class

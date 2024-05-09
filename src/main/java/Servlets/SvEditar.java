@@ -1,9 +1,11 @@
-
 package Servlets;
 
 import com.mycompany.mundo.Metodos;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,19 +36,23 @@ public class SvEditar extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
-        HttpSession session = request.getSession();
         System.out.println("Corriendo metodo para editar");
 
-        int idSolicitud = (int) session.getAttribute("idSolicitud");
-        int idUsuario = 1;
-        String tipoSolicitud = request.getParameter("tipoSolicitud");
-        String fecha = request.getParameter("fecha");
+        int idSolicitud = Integer.parseInt(request.getParameter("idSolicitud"));
+        System.out.println("id solisitud" + idSolicitud);
+        int tipoSolicitud = Integer.parseInt(request.getParameter("tipoSolicitud")); // Convertir a entero
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date fecha = null;
+        try {
+            fecha = new Date(sdf.parse(request.getParameter("fecha")).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace(); // Manejar la excepción adecuadamente
+        }
         String descripcion = request.getParameter("descripcion");
         String archivo = request.getParameter("archivo");
-        String estado = "Por revisar";
-        
-        metodos.editarSolicitud(idSolicitud, idUsuario, tipoSolicitud, fecha, descripcion, archivo, estado, session, response, metodos);
+
+        metodos.editarSolicitud(idSolicitud, tipoSolicitud, fecha, descripcion, archivo);
+        response.sendRedirect("solicitudesUsuario.jsp");
     }
 
     /**
