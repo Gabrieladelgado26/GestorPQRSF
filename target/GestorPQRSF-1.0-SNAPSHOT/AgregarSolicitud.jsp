@@ -19,24 +19,24 @@
                 <div class="text-primary col-lg-5">
                     <div class="d-flex flex-column justify-content-center bg-primary h-100 p-5">
                         <div class="d-inline-flex border border-secondary p-4 mb-4">
-                            <h1 class="flaticon-office font-weight-normal text-primary m-0 mr-3"></h1>
+                            <h1 class="flaticon-office font-weight-normal text-pri m-0 mr-3"></h1>
                             <div class="d-flex flex-column">
-                                <h5 class="text-primary">Nuestra oficina</h5>
-                                <p class="m-0 text-primary">Calle 19 # 43</p>
+                                <h5 class="text-pri">Nuestra oficina</h5>
+                                <p class="m-0 text-pri">Calle 19 # 43</p>
                             </div>
                         </div>
                         <div class="d-inline-flex border border-secondary p-4 mb-4">
-                            <h1 class="flaticon-email font-weight-normal text-primary m-0 mr-3"></h1>
+                            <h1 class="flaticon-email font-weight-normal text-pri m-0 mr-3"></h1>
                             <div class="d-flex flex-column">
-                                <h5 class="text-primary">Nuestro Email</h5>
-                                <p class="m-0 text-primary">iManager@gmail.com</p>
+                                <h5 class="text-pri">Nuestro Email</h5>
+                                <p class="m-0 text-pri">iManager@gmail.com</p>
                             </div>
                         </div>
                         <div class="d-inline-flex border border-secondary p-4">
-                            <h1 class="flaticon-telephone font-weight-normal text-primary m-0 mr-3"></h1>
+                            <h1 class="flaticon-telephone font-weight-normal text-pri m-0 mr-3"></h1>
                             <div class="d-flex flex-column">
-                                <h5 class="text-primary">Atención al cliente</h5>
-                                <p class="m-0 text-primary">+012 345 6789</p>
+                                <h5 class="text-pri">Atención al cliente</h5>
+                                <p class="m-0 text-pri">+012 345 6789</p>
                             </div>
                         </div>
                     </div>
@@ -45,6 +45,8 @@
                     <div class="contact-form">
                         <div id="success"></div>
                         <form action="SvAgregarSolicitud" method="post">
+                            <!-- Campo oculto para el ID del usuario obtenido de la sesión -->
+                            <input type="hidden" name="idUsuario" value="<%= session.getAttribute("idUsuario")%>">
                             <div class="control-group">
                                 <select type="text" class="form-control" id="tipoSolicitud" name="tipoSolicitud" required="required" data-validation-required-message="Porfavor ingrese el tipo de solicitud a realizar">
                                     <option value="" disabled selected>Seleccione el tipo de solicitud</option>

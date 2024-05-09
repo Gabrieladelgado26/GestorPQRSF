@@ -14,7 +14,7 @@
         <!-- Style -->
         <link rel="stylesheet" href="recursos/login/css/style.css">
 
-        <title>Iniciar sesión</title>
+        <title>Registro usuario</title>
     </head>
 
     <body>
@@ -29,34 +29,32 @@
                                     <p class="mb-4" style="margin-top: 8px">Has tu registro para realizar todas las solicitudes que necesites.</p>
                                 </div>
                                 <a type="button" class="ml-auto forgot-pass" style="margin-bottom: 10px; padding-left: 320px" href="login.jsp">Iniciar sesión</a>
-                                <br><form action="SvAgregarUsuario" method="post">
+                                <br><form action="SvRegistro" method="POST">
                                     <div class="form-group first">
-                                        <label for="nombre">Nombre</label>
-                                        <input type="text" class="form-control" id="nombre" name="nombre">
-                                    </div>
-                                    <div class="form-group first">
-                                        <label for="apellido">Apellido</label>
-                                        <input type="text" class="form-control" id="apellido" name="apellido">
+                                        <label for="nombreRegistro">Nombre</label>
+                                        <input type="text" class="form-control" id="nombre" name="nombre" required="required" data-validation-required-message="Porfavor ingrese su nombre" >
                                     </div>
                                     <div class="form-group first">
-                                        <label for="cedula">Cedula</label>
-                                        <input type="text" class="form-control" id="cedula" name="cedula">
+                                        <label for="apellidoRegistro">Apellido</label>
+                                        <input type="text" class="form-control" id="apellido" name="apellido" required="required" data-validation-required-message="Porfavor ingrese su apellido" >
                                     </div>
                                     <div class="form-group first">
-                                        <label for="telefono">Telefono</label>
-                                        <input type="text" class="form-control" id="telefono" name="telefono">
+                                        <label for="cedulaRegistro">Cedula</label>
+                                        <input type="text" class="form-control" id="cedula" name="cedula" required="required" data-validation-required-message="Porfavor ingrese su cedula" >
                                     </div>
                                     <div class="form-group first">
-                                        <label for="telefono">Correo</label>
-                                        <input type="email" class="form-control" id="correo" name="correo">
+                                        <label for="telefonoRegistro">Telefono</label>
+                                        <input type="text" class="form-control" id="telefono" name="telefono" required="required" data-validation-required-message="Porfavor ingrese su telefono" >
                                     </div>
-                                    <div class="d-flex mb-5 align-items-center">
-                                        <label class="control control--checkbox mb-0"><span class="caption">Recuérdame</span>
-                                            <input type="checkbox" checked="checked"/>
-                                            <div class="control__indicator"></div>
-                                        </label>
+                                    <div class="form-group first">
+                                        <label for="telefonoRegistro">Correo</label>
+                                        <input type="email" class="form-control" id="correo" name="correo" required="required" data-validation-required-message="Porfavor ingrese su correo" >
                                     </div>
-                                    <input type="submit" value="Registrar" class="btn btn-block btn-primary">
+                                    <div class="form-group first">
+                                        <label for="contraseñaRegistro">Contraseña</label>
+                                        <input type="password" class="form-control" id="contresena" name="contrasena" required="required" data-validation-required-message="Porfavor ingrese su contraseña" >
+                                    </div>
+                                    <br><input type="submit" value="Registrar" class="btn btn-block btn-primary">
                                 </form>
                             </div>
                         </div>

@@ -3,7 +3,7 @@
 
 <body>
 
-    <%@include file= "templates/navbarUsuario.jsp" %>
+    <%@include file= "templates/navbarAdministrador.jsp" %>
 
     <!-- Carousel Start -->
     <div class="container-fluid p-0">
@@ -50,9 +50,9 @@
             <div class="row">
                 <div class="col-lg-5">
                     <div class="d-flex flex-column align-items-center justify-content-center bg-primary h-100 py-5 px-3">
-                        <i class="flaticon-brickwall display-1 font-weight-normal text-pri mb-3"></i>
-                        <h4 class="text-pri text-uppercase display-3 mb-3">25+</h4>
-                        <h1 class="text-pri m-0">Años de experiencia</h1>
+                        <i class="flaticon-brickwall display-1 font-weight-normal text-primary mb-3"></i>
+                        <h4 class="text-primary text-uppercase display-3 mb-3">25+</h4>
+                        <h1 class="text-primary m-0">Años de experiencia</h1>
                     </div>
                 </div>
                 <div class="col-lg-7 m-0 my-lg-5 pt-5 pb-5 pb-lg-2 pl-lg-5">
@@ -99,7 +99,7 @@
                     <h6 class="text-primary font-weight-normal text-uppercase mb-3">Conoce tus derechos</h6>
                     <h1 class="mb-4 section-title">Conoce el tipo de solicitud que deseas presentar</h1>
                     <p>Es importante que tengas en cuenta las definiciones de peticiones, quejas, reclamos y sugerencias para que puedas realizar tu solicitud sin problemas y conoscas los términos de respuesta.</p>
-                    <a href="AgregarSolicitud.jsp" class="btn btn-pri mt-3 py-2 px-4">Realizar una solicitud</a>
+                    <a href="AgregarSolicitud.jsp" class="btn btn-primary mt-3 py-2 px-4">Realizar una solicitud</a>
                 </div>
                 <div class="col-lg-6 p-0 pt-5 pt-lg-0">
                     <div class="owl-carousel service-carousel position-relative">
@@ -140,7 +140,7 @@
     <!-- Footer End -->
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-pri back-to-top"><i class="fa fa-angle-double-up"></i></a>
+    <a href="#" class="btn btn-lg btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
     <!-- Inclución de la plantilla footer -->
     <%@include file= "templates/footer.jsp" %>

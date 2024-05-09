@@ -7,17 +7,6 @@ CREATE DATABASE IF NOT EXISTS gestor_PQRSF;
 -- Selecciona la base de datos recién creada para realizar operaciones en ella
 USE gestor_PQRSF;
 
--- Crea la tabla 'roles' para almacenar a los usuarios
-CREATE TABLE roles(
-	idRol INT PRIMARY KEY AUTO_INCREMENT,  -- Identificador único autoincremental
-    rol VARCHAR(20)
-);
-
--- Roles definidas anteriormente
-INSERT INTO roles(rol) 
-    VALUES ('Administrador'),
-		   ('Usuario');
-
 -- Crea la tabla 'usuarios' para almacenar a los usuarios
 CREATE TABLE usuarios(
     idUsuario INT PRIMARY KEY AUTO_INCREMENT,  -- Identificador único autoincremental
@@ -26,8 +15,8 @@ CREATE TABLE usuarios(
     cedula VARCHAR(20), -- Cédula de la persona
     telefono VARCHAR(20), -- Telefono de la persona
     correo VARCHAR(200), -- Correo de la persona
-    idRol INT,
-    FOREIGN KEY (idRol) REFERENCES roles(idRol) ON DELETE SET NULL -- Llave foránea
+    contrasena VARCHAR(20), 
+    rol ENUM('Administrador', 'Usuario')
 );
 
 CREATE TABLE tipoSolicitud(
@@ -55,8 +44,8 @@ CREATE TABLE solicitud(
     FOREIGN KEY (idTipoSolicitud) REFERENCES tipoSolicitud(idTipoSolicitud) ON DELETE SET NULL -- Llave foránea
 );
 
-INSERT INTO usuarios(nombre, apellido, cedula, telefono, correo, idRol)
-VALUES ('Gabriela', 'Delgado', '1081053738', '3114882004', 'gabrieladelgadoc07@gmail.com', 1);
+INSERT INTO usuarios(nombre, apellido, cedula, telefono, correo, contrasena, rol)
+VALUES ('Gabriela', 'Delgado', '1081053738', '3114882004', 'gabrieladelgadoc07@gmail.com', '123', 'Administrador');
 
 DELIMITER //
 
@@ -65,12 +54,13 @@ CREATE PROCEDURE agregarUsuario(
     IN p_apellido TEXT,
     IN p_cedula VARCHAR(20),
     IN p_telefono VARCHAR(20),
-    IN p_correo INT,
-    IN p_idRol INT
+    IN p_correo VARCHAR(200),
+    IN p_contrasena VARCHAR(20),
+    IN p_rol ENUM('Administrador', 'Usuario')
 )
 BEGIN
-    INSERT INTO usuarios(nombre, apellido, cedula, telefono, correo, idRol)
-	VALUES (p_nombre, p_apellido, p_cedula, p_telefono, p_correo, p_idRol);
+    INSERT INTO usuarios(nombre, apellido, cedula, telefono, correo, contrasena, rol)
+	VALUES (p_nombre, p_apellido, p_cedula, p_telefono, p_correo, p_contrasena, p_rol);
 END //
 
 DELIMITER ;

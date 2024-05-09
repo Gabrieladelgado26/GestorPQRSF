@@ -30,7 +30,7 @@
                 <div class="navbar-nav ml-auto py-0">
                     <a href="index.jsp" class="nav-item nav-link active">Inicio</a>
                     <div class="d-flex align-items-center">
-                        <a href="login.jsp" class="btn btn-pri text-center py-3" style="margin-left:20px; margin-right: 40px">Iniciar sesión</a>
+                        <a href="login.jsp" class="btn btn-primary text-center py-3" style="margin-left:20px; margin-right: 40px">Iniciar sesión</a>
                     </div>
                 </div>
             </div>

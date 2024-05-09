@@ -23,14 +23,14 @@ import javax.servlet.http.HttpSession;
  */
 public class Metodos {
 
-    public static void SvAgregarUsuario(String nombre, String apellido, String cedula, String telefono, String correo, String rol, HttpSession session, HttpServletResponse response) throws IOException {
+    public static void agregarUsuario(String nombre, String apellido, String cedula, String telefono, String correo, String contrasena, String rol, HttpSession session, HttpServletResponse response) throws IOException {
         Conexion conexion = new Conexion();
         Connection conn = conexion.establecerConexion();
         if (conn != null) {
             try {
 
                 // Llamar al procedimiento almacenado
-                CallableStatement stmt = conn.prepareCall("{call agregarUsuario(?, ?, ?, ?, ?, ?)}");
+                CallableStatement stmt = conn.prepareCall("{call agregarUsuario(?, ?, ?, ?, ?, ?, ?)}");
 
                 // Establecer parámetros del procedimiento almacenado
                 stmt.setString(1, nombre);
@@ -38,7 +38,8 @@ public class Metodos {
                 stmt.setString(3, cedula);
                 stmt.setString(4, telefono);
                 stmt.setString(5, correo);
-                stmt.setString(6, rol);
+                stmt.setString(6, contrasena);
+                stmt.setString(7, rol);
 
                 // Ejecutar el procedimiento almacenado
                 stmt.execute();
@@ -46,14 +47,13 @@ public class Metodos {
                 // Cerrar la conexión
                 conn.close();
 
-                // Redirigir a alguna página de éxito o mostrar un mensaje de éxito
-                response.sendRedirect("login.jsp"); // Redirigir a una página de éxito
+                System.out.println("Redireccionando a login.jsp");
+                response.sendRedirect("login.jsp");
 
-                System.out.println("Conexion exitosa");
-
-            } catch (SQLException e) { // Manejar cualquier error de SQL
-                response.getWriter().println("Error al agregar pruebe de nuevo"); // Esto mostrará un mensaje de error en la página
+            } catch (SQLException e) {
+                response.getWriter().println("Error al agregar, por favor, inténtelo de nuevo");
             }
+
         } else {
             // Manejar el caso en que no se pueda obtener una conexión a la base de datos
             response.getWriter().println("No se pudo establecer una conexión a la base de datos."); // Esto mostrará un mensaje de error en la página
@@ -211,34 +211,37 @@ public class Metodos {
         return solicitudes;
     }
 
-    public static String generarHTML(List<Solicitud> solicitudes) {
+    public static String generarSolicitudesUsuario(List<Solicitud> solicitudes, int idUsuario) {
         StringBuilder html = new StringBuilder();
 
         if (solicitudes.isEmpty()) {
             html.append("<br><div class=\"no-tutorials\">No hay solicitudes registradas</div></br>");
         } else {
             for (Solicitud solicitud : solicitudes) {
-                html.append("<div class=\"col-md-4 mb-4\">")
-                        .append("<div class=\"card border-0 mb-2\">")
-                        .append("<div class=\"card-body bg-white p-4\">")
-                        .append("<div class=\"d-flex align-items-center mb-3\">")
-                        .append("<a class=\"btn btn-pri\" href=\"\"><i class=\"fa fa-link\"></i></a>")
-                        .append("<h5 class=\"m-0 ml-3 text-truncate\">").append(solicitud.getTipoSolicitud()).append("</h5>")
-                        .append("</div>")
-                        .append("<p>").append(solicitud.getDescripcion()).append("</p>")
-                        .append("<div class=\"d-flex\">")
-                        .append("<small class=\"mr-3\"><i class=\"fa fa-user text-primary\"></i>Id usuario: ").append(solicitud.getIdPersona()).append("</small>")
-                        .append("<small class=\"mr-3\"><i class=\"fa fa-folder text-primary\"></i>Archivo: ").append(solicitud.getArchivo()).append("</small>")
-                        .append("<small class=\"mr-3\"><i class=\"fa fa-comments text-primary\"></i>Fecha: ").append(solicitud.getFecha()).append("</small>")
-                        .append("</div>")
-                        .append("<div class=\"d-flex justify-content-center\">")
-                        .append("<a href=\"#\" style=\"margin-top: 20px; margin-right: 5px;\" class=\"btn btn-sm btn-outline-primary\"  data-nombre=\"" + solicitud.getIdSolicitud() + "\"data-bs-toggle=\"modal\" data-bs-target=\"#visualizar\"><i class=\"fa-solid fa-eye fa-sm\"></i></a>")
-                        .append("<a href=\"#\" style=\"margin-top: 20px; margin-right: 5px;\" class=\"btn btn-sm btn-outline-success\" data-nombre=\"" + solicitud.getIdSolicitud() + "\" data-bs-toggle=\"modal\" data-bs-target=\"#editar\"><i class=\"fa-solid fa-pen-clip fa-sm\"></i></a>")
-                        .append("<a href=\"#\" style=\"margin-top: 20px;\" class=\"btn btn-sm btn-outline-danger\" onclick=\"modalEliminar('" + solicitud.getIdSolicitud() + "')\" data-nombre=\"" + solicitud.getIdSolicitud() +  "data-bs-target=\"#eliminar\" \"><i class=\"fa-solid fa-trash fa-sm\"></i></a>")
-                        .append("</div>")
-                        .append("</div>")
-                        .append("</div>")
-                        .append("</div>");
+                // Verificar si la solicitud pertenece al usuario actual
+                if (solicitud.getIdPersona() == idUsuario) {
+                    html.append("<div class=\"col-md-4 mb-4\">")
+                            .append("<div class=\"card border-0 mb-2\">")
+                            .append("<div class=\"card-body bg-white p-4\">")
+                            .append("<div class=\"d-flex align-items-center mb-3\">")
+                            .append("<a class=\"btn btn-pri\" href=\"\"><i class=\"fa fa-link\"></i></a>")
+                            .append("<h5 class=\"m-0 ml-3 text-truncate\">").append(solicitud.getTipoSolicitud()).append("</h5>")
+                            .append("</div>")
+                            .append("<p>").append(solicitud.getDescripcion()).append("</p>")
+                            .append("<div class=\"d-flex\">")
+                            .append("<small class=\"mr-3\"><i class=\"fa fa-user text-primary\"></i>Id usuario: ").append(solicitud.getIdPersona()).append("</small>")
+                            .append("<small class=\"mr-3\"><i class=\"fa fa-folder text-primary\"></i>Archivo: ").append(solicitud.getArchivo()).append("</small>")
+                            .append("<small class=\"mr-3\"><i class=\"fa fa-comments text-primary\"></i>Fecha: ").append(solicitud.getFecha()).append("</small>")
+                            .append("</div>")
+                            .append("<div class=\"d-flex justify-content-center\">")
+                            .append("<a href=\"#\" style=\"margin-top: 20px; margin-right: 5px;\" class=\"btn btn-sm btn-outline-primary\"  data-nombre=\"" + solicitud.getIdSolicitud() + "\"data-bs-toggle=\"modal\" data-bs-target=\"#visualizar\"><i class=\"fa-solid fa-eye fa-sm\"></i></a>")
+                            .append("<a href=\"#\" style=\"margin-top: 20px; margin-right: 5px;\" class=\"btn btn-sm btn-outline-success\" data-nombre=\"" + solicitud.getIdSolicitud() + "\" data-bs-toggle=\"modal\" data-bs-target=\"#editar\"><i class=\"fa-solid fa-pen-clip fa-sm\"></i></a>")
+                            .append("<a href=\"#\" style=\"margin-top: 20px;\" class=\"btn btn-sm btn-outline-danger\" onclick=\"modalEliminar('" + solicitud.getIdSolicitud() + "')\" data-nombre=\"" + solicitud.getIdSolicitud() + "data-bs-target=\"#eliminar\" \"><i class=\"fa-solid fa-trash fa-sm\"></i></a>")
+                            .append("</div>")
+                            .append("</div>")
+                            .append("</div>")
+                            .append("</div>");
+                }
             }
         }
         return html.toString();
@@ -390,7 +393,7 @@ public class Metodos {
         } catch (SQLException ex) {
             Logger.getLogger(SvEditar.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         // Redirigir a alguna página de éxito o mostrar un mensaje de éxito
         response.sendRedirect("solicitudesUsuario.jsp"); // Redirigir a una página de éxito
 
@@ -410,5 +413,35 @@ public class Metodos {
                 e.printStackTrace();
             }
         }
+    }
+
+    public String[] iniciarSesion(String cedula, String contrasena) {
+        Conexion conexion = new Conexion();
+        Connection conn = conexion.establecerConexion();
+        String[] datosUsuario = null;
+
+        try {
+            String sql = "SELECT IdUsuario, rol, nombre FROM usuarios WHERE cedula = ? AND contrasena = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, cedula);
+            pstmt.setString(2, contrasena);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                // Si las credenciales son válidas, obtener el id, rol y nombre del usuario
+                int idUsuario = rs.getInt("idUsuario");
+                System.out.println("ID del usuario en sesión: " + idUsuario);
+                String rol = rs.getString("rol");
+                String nombre = rs.getString("nombre");
+                datosUsuario = new String[]{String.valueOf(idUsuario), rol, nombre};
+            }
+            rs.close();
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("Error al iniciar sesión: " + e.getMessage());
+        }
+
+        return datosUsuario;
     }
 }

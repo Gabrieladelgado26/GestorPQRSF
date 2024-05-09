@@ -35,11 +35,11 @@
                                 <br><form action="SvLogin" method="post">
                                     <div class="form-group first">
                                         <label for="usuario">Cedula de usuario</label>
-                                        <input type="text" class="form-control" id="usuario" name="usuario">
+                                        <input type="text" class="form-control" id="cedula" name="cedula" required="required" data-validation-required-message="Porfavor ingrese su cedula" >
                                     </div>
                                     <div class="form-group last mb-4">
                                         <label for="contraseña">Contraseña</label>
-                                        <input type="password" class="form-control" id="contraseña" name="contraseña">
+                                        <input type="password" class="form-control" id="contrasena" name="contrasena" required="required" data-validation-required-message="Porfavor ingrese la contraseña" >
                                     </div>
                                     <div class="d-flex mb-5 align-items-center">
                                         <label class="control control--checkbox mb-0"><span class="caption">Recuérdame</span>
@@ -47,7 +47,7 @@
                                             <div class="control__indicator"></div>
                                         </label>
                                     </div>
-                                    <input type="button" onclick="window.location.href='solicitudesUsuario.jsp'" value="Iniciar sesión" class="btn btn-block btn-primary">
+                                    <input type="submit" value="Iniciar sesión" class="btn btn-block btn-primary">
                                 </form>
                                 <div class="social-login" style="margin-top: 20px">
                                     <a href="#" class="facebook">

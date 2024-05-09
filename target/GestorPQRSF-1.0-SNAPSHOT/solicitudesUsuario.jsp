@@ -1,3 +1,6 @@
+<%@page import="java.sql.SQLException"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.PreparedStatement"%>
 <%@page import="com.mycompany.mundo.Solicitud"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.ArrayList"%>
@@ -55,11 +58,11 @@
             <div class="container py-3">
                 <div class="row align-items-center py-4">
                     <div class="col-md-6 text-center text-md-left">
-                        <h1 class="mb-4 mb-md-0 text-pri text-uppercase">Tus solicitudes</h1>
+                        <h1 class="mb-4 mb-md-0 text-primary text-uppercase">Tus solicitudes</h1>
                     </div>
                     <div class="col-md-6 text-center text-md-right">
                         <div class="d-inline-flex align-items-center">
-                            <a class="btn btn-pri" href="AgregarSolicitud.jsp">Agregar solicitud</a>
+                            <a class="btn btn-primary" href="AgregarSolicitud.jsp">Agregar solicitud</a>
                         </div>
                     </div>
                 </div>
@@ -78,18 +81,83 @@
                 </div>
                 <div class="row pb-3 justify-content-center">
                     <%
-                        Conexion tutorial = new Conexion();
                         Metodos metodos = new Metodos();
-                        Connection conn = tutorial.establecerConexion();
                         List<Solicitud> solicitudes = new ArrayList<>();
-                        // En caso de que se registre exitosamente
-
+                        String idUsuarioStr = (String) session.getAttribute("idUsuario");
+                        int idUsuario = (idUsuarioStr != null) ? Integer.parseInt(idUsuarioStr) : 0;
+                        Conexion conexion = new Conexion();
+                        Connection conn = conexion.establecerConexion();
                         solicitudes = metodos.obtenerSolicitudes(conn);
+                        PreparedStatement pstmt = null;
+                        ResultSet rs = null;
 
-                        String html = metodos.generarHTML(solicitudes);
-                        // Imprimir el contenido HTML
-                        out.println(html);
+                        if (solicitudes.isEmpty()) { %>
+                    <br>
+                    <div class="no-tutorials">No hay solicitudes registradas</div>
+                    </br>
+                    <% } else {
+                        try {
+                            String sql = "SELECT idSolicitud, tipoSolicitud, fecha, descripcion, archivo, estado "
+                                    + "FROM solicitud "
+                                    + "INNER JOIN tipoSolicitud ON solicitud.idTipoSolicitud = tipoSolicitud.idTipoSolicitud "
+                                    + "WHERE idUsuario = ? ORDER BY fecha DESC";
+
+                            pstmt = conn.prepareStatement(sql);
+                            pstmt.setInt(1, idUsuario);
+                            rs = pstmt.executeQuery();
+
+                            // Iterate through the result set and display each inquiry in the table
+                            while (rs.next()) {
+                                String idSolicitud = rs.getString("idSolicitud");
+                                String tipoSolicitud = rs.getString("tipoSolicitud");
+                                String fecha = rs.getString("fecha");
+                                String descripcion = rs.getString("descripcion");
+                                String archivo = rs.getString("archivo");
+                                String estado = rs.getString("estado");
                     %>
+                    <div class="col-md-4 mb-4">
+                        <div class="card border-0 mb-2">
+                            <div class="card-body bg-white p-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <a class="btn btn-pri" href=""><i class="fa fa-link"></i></a>
+                                    <h4 class="m-0 ml-3 text-truncate"><%= tipoSolicitud%></h4>
+                                </div>
+                                <p><%= descripcion%></p>
+                                <div class="">
+                                    <div class="mr-6" style="margin-bottom: 10px"><i class="fa fa-folder text-primary"></i> Archivo: <%= archivo%></div>
+                                    <div class="mr-6"><i class="fa fa-comments text-primary" style="margin-bottom: 10px"></i> Fecha: <%= fecha%></div>
+                                    <div class="mr-6"><i class="fa fa-user text-primary"></i> Estado: <%= estado%></div>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <a href="#" style="margin-top: 20px; margin-right: 5px;" class="btn btn-sm btn-outline-primary" data-nombre="<%= idSolicitud%>" data-bs-toggle="modal" data-bs-target="#visualizar"><i class="fa-solid fa-eye fa-sm"></i></a>
+                                    <a href="#" style="margin-top: 20px; margin-right: 5px;" class="btn btn-sm btn-outline-success" data-nombre="<%= idSolicitud%>" data-bs-toggle="modal" data-bs-target="#editar"><i class="fa-solid fa-pen-clip fa-sm"></i></a>
+                                    <a href="#" style="margin-top: 20px;" class="btn btn-sm btn-outline-danger" onclick="modalEliminar('<%= idSolicitud%>')" data-nombre="<%= idSolicitud%>" data-bs-target="#eliminar"><i class="fa-solid fa-trash fa-sm"></i></a>
+                                </div>
+                            </div>
+                            <%
+                                    }
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                } finally {
+                                    // Close the connection and resources
+                                    try {
+                                        if (rs != null) {
+                                            rs.close();
+                                        }
+                                        if (pstmt != null) {
+                                            pstmt.close();
+                                        }
+                                        if (conn != null) {
+                                            conn.close();
+                                        }
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            %>
+                        </div>
+                    </div>
+                    <% }%>
                     <div class="col-md-12 mb-4">
                         <nav aria-label="Page navigation">
                             <ul class="pagination justify-content-center mb-0">
@@ -115,7 +183,7 @@
             </div>
         </div>
         <!-- Blog End -->
-        
+
         <!-- Footer Start -->
         <div class="container-fluid bg-dark text-white py-4 px-sm-3 px-md-5">
             <p class="m-0 text-center text-white">

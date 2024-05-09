@@ -14,27 +14,24 @@ public class Usuario {
     private String cedula;
     private String telefono;
     private String correo;
+    private String contrasena;
     private String rol;
 
     // Constructor vacio
     public Usuario() {
     }
 
-    // Constructor con parametros de la clase
-    public Usuario(int idUsuario, String nombre, String apellido, String cedula, String telefono, String correo, String rol) {
+    public Usuario(int idUsuario, String nombre, String apellido, String cedula, String telefono, String correo, String contrasena, String rol) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.apellido = apellido;
         this.cedula = cedula;
         this.telefono = telefono;
         this.correo = correo;
+        this.contrasena = contrasena;
         this.rol = rol;
     }
 
-    /**
-     * Getters y Setters de los atributos de la clase Usuario
-     * @return 
-     */
     public int getIdUsuario() {
         return idUsuario;
     }
@@ -81,6 +78,14 @@ public class Usuario {
 
     public void setCorreo(String correo) {
         this.correo = correo;
+    }
+
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
     }
 
     public String getRol() {

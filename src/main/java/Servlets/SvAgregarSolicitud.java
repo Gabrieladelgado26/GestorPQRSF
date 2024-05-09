@@ -38,7 +38,7 @@ public class SvAgregarSolicitud extends HttpServlet {
         HttpSession session = request.getSession();
 
         // Obtener los parámetros del formulario
-        int idUsuario = 1;
+        int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
         String tipoSolicitud = request.getParameter("tipoSolicitud");
         // Convertir la cadena de texto de la fecha a un objeto java.sql.Date
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

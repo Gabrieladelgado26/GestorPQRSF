@@ -1,7 +1,7 @@
-
 package Servlets;
 
 import com.mycompany.mundo.Conexion;
+import com.mycompany.mundo.Metodos;
 import com.mycompany.mundo.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -41,13 +41,37 @@ public class SvLogin extends HttpServlet {
         processRequest(request, response);
     }
 
+    Metodos metodos = new Metodos();
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Usuario usuario = new Usuario();
-        Conexion conexion = new Conexion();
-        Connection conn = conexion.establecerConexion();
-        // usuario = metodos.buscarTutorialPorId(idTutorial, conn);
+        // Obtener los datos del formulario de inicio de sesión
+        String cedula = request.getParameter("cedula");
+        String contrasena = request.getParameter("contrasena");
+
+        // Verificar las credenciales del usuario y obtener el id, rol y nombre
+        String[] datosUsuario = metodos.iniciarSesion(cedula, contrasena);
+
+        if (datosUsuario != null) {
+            // Si las credenciales son válidas, almacenar el id, rol y nombre en la sesión
+            HttpSession session = request.getSession();
+            session.setAttribute("idUsuario", datosUsuario[0]); // El id está en la posición 0
+            session.setAttribute("rol", datosUsuario[1]); // El rol está en la posición 1
+            session.setAttribute("nombre", datosUsuario[2]); // El nombre está en la posición 2
+
+            // Redirigir a la página correspondiente según el rol del usuario
+            String rol = datosUsuario[1];
+            if (rol.equals("Usuario")) {
+                response.sendRedirect("solicitudesUsuario.jsp");
+            } else if (rol.equals("Administrador")) {
+                response.sendRedirect("solicitudesAdministrador.jsp");
+            }
+        } else {
+            // Si las credenciales no son válidas, redirigir de vuelta al formulario de inicio de sesión con un mensaje de error
+            System.out.println("No existe el usuario");
+            response.sendRedirect("login.jsp");
+        }
     }
 
     /**
