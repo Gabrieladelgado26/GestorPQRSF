@@ -124,14 +124,14 @@
                                 </div>
                                 <p><%= descripcion%></p>
                                 <div class="">
-                                    <div class="mr-6" style="margin-bottom: 10px"><i class="fa fa-folder text-primary"></i> Archivo: <%= archivo%></div>
-                                    <div class="mr-6"><i class="fa fa-comments text-primary" style="margin-bottom: 10px"></i> Fecha: <%= fecha%></div>
-                                    <div class="mr-6"><i class="fa fa-user text-primary"></i> Estado: <%= estado%></div>
+                                    <div class="mr-6" style="margin-bottom: 10px"><i class="fa fa-folder text-primary"></i>  Archivo: <%= archivo%></div>
+                                    <div class="mr-6"><i class="fa fa-comments text-primary" style="margin-bottom: 10px"></i>  Fecha: <%= fecha%></div>
+                                    <div class="mr-6"><i class="fa fa-user text-primary"></i>  Estado: <%= estado%></div>
                                 </div>
                                 <div class="d-flex justify-content-center">
                                     <a href="#" style="margin-top: 20px; margin-right: 5px;" class="btn btn-sm btn-outline-primary" data-nombre="<%= idSolicitud%>" data-bs-toggle="modal" data-bs-target="#visualizar"><i class="fa-solid fa-eye fa-sm"></i></a>
                                     <a href="#" style="margin-top: 20px; margin-right: 5px;" class="btn btn-sm btn-outline-success" data-nombre="<%= idSolicitud%>" data-bs-toggle="modal" data-bs-target="#editar"><i class="fa-solid fa-pen-clip fa-sm"></i></a>
-                                    <a href="#" style="margin-top: 20px;" class="btn btn-sm btn-outline-danger" onclick="modalEliminar('<%= idSolicitud%>')" data-nombre="<%= idSolicitud%>" data-bs-target="#eliminar"><i class="fa-solid fa-trash fa-sm"></i></a>
+                                    <a href="#" style="margin-top: 20px;" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminar" onclick="setearIdSolicitud(<%= idSolicitud%>);"><i class="fa-solid fa-trash fa-sm"></i></a>
                                 </div>
                             </div>
                             <%
@@ -194,7 +194,7 @@
         <!-- Footer End -->
 
         <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-pri back-to-top"><i class="fa fa-angle-double-up"></i></a>
+        <a href="#" class="btn btn-lg btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
 
         <!-------------------------------------------- Ventanas modales ---------------------------------------------->
@@ -249,21 +249,29 @@
                 <div class="modal-content">
                     <div class="popup">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Eliminar solicitud</h5>
+                            <h4 class="modal-title" id="exampleModalLabel">Eliminar solicitud</h4>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="form">
-                            <p class="text-center">¿Estas seguro que quieres eliminar esta solicitud?</p>
+                            <br><p class="text-center">¿Estas seguro que quieres eliminar esta solicitud?</p>
                             <div class="form-element justify-content-center" style="display: flex; justify-content: space-between;">
-                                <input type="hidden" id="idSolicitudEliminar" name="idSolicitudEliminar">
-                                <button type="button" class="btn btn-secondary" style="margin-bottom: 15px" data-bs-dismiss="modal" style="margin-right: 10px;">Cancelar</button>
-                                <a class="btn btn-lg btn-danger" style="margin-left: 10px; margin-bottom: 15px" onclick="eliminar()">Eliminar</a>
+                                <form id="eliminarSolicitudForm" action="SvEliminar" method="POST">
+                                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" style="margin-right: 6px; margin-bottom: 15px">Cancelar</button>
+                                    <input type="hidden" id="idSolicitudEliminar" name="idSolicitud">
+                                    <button type="submit" class="btn btn-danger btn-sm" style="margin-bottom: 15px">Eliminar</button>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <script>
+            function setearIdSolicitud(idSolicitud) {
+                document.getElementById("idSolicitudEliminar").value = idSolicitud;
+            }
+        </script>
 
         <script>
             document.addEventListener("DOMContentLoaded", function () {

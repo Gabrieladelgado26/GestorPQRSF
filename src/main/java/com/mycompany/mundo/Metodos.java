@@ -399,14 +399,14 @@ public class Metodos {
 
     }
 
-    public static void eliminarSolicitud(int id, HttpSession session, HttpServletResponse response) throws IOException {
+    public static void eliminarSolicitud(int idSolicitud) throws IOException {
         Conexion conexion = new Conexion();
         Connection conn = conexion.establecerConexion();
         if (conn != null) {
 
             String sql = "{CALL eliminarSolicitud(?)}";
             try (CallableStatement stmt = conn.prepareCall(sql)) {
-                stmt.setInt(1, id);
+                stmt.setInt(1, idSolicitud);
                 stmt.execute();
                 System.out.println("Si llegue");
             } catch (SQLException e) {

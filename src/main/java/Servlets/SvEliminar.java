@@ -34,13 +34,12 @@ public class SvEliminar extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
         System.out.println("Corriendo metodo para eliminar");
-        int id = Integer.parseInt(request.getParameter("idSolicitudEliminar"));
-        HttpSession session = request.getSession();
+        int idSolicitud = Integer.parseInt(request.getParameter("idSolicitud"));
         
-        metodos.eliminarSolicitud(id, session, response);
+        metodos.eliminarSolicitud(idSolicitud);
 
+        response.sendRedirect("solicitudesUsuario.jsp");
     }
     
     /**
