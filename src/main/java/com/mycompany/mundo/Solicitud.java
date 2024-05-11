@@ -16,19 +16,21 @@ public class Solicitud {
     private Date fecha;
     private String descripcion;
     private String archivo;
+    private String respuesta;
     private String estado;
 
     // Constructor vacio
     public Solicitud() {
     }
 
-    public Solicitud(int idSolicitud, int idPersona, String tipoSolicitud, Date fecha, String descripcion, String archivo, String estado) {
+    public Solicitud(int idSolicitud, int idPersona, String tipoSolicitud, Date fecha, String descripcion, String archivo, String respuesta, String estado) {
         this.idSolicitud = idSolicitud;
         this.idPersona = idPersona;
         this.tipoSolicitud = tipoSolicitud;
         this.fecha = fecha;
         this.descripcion = descripcion;
         this.archivo = archivo;
+        this.respuesta = respuesta;
         this.estado = estado;
     }
 
@@ -80,6 +82,14 @@ public class Solicitud {
         this.archivo = archivo;
     }
 
+    public String getRespuesta() {
+        return respuesta;
+    }
+
+    public void setRespuesta(String respuesta) {
+        this.respuesta = respuesta;
+    }
+
     public String getEstado() {
         return estado;
     }
@@ -87,6 +97,4 @@ public class Solicitud {
     public void setEstado(String estado) {
         this.estado = estado;
     }
-    
-    
 }

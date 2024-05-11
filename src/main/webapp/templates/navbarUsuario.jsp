@@ -32,6 +32,29 @@
                     <a href="solicitudesUsuario.jsp" class="nav-item nav-link active" style="margin-right: 50px">Solicitudes</a>
                 </div>
             </div>
+            <!-- Nav Item - User Information -->
+            <li class="dropdown ">
+                <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <%
+                        String nombreU = (String) session.getAttribute("nombre");
+                        if (nombreU != null) {
+                    %>
+                    <span class="d-lg-inline nav-item nav-link" style="color: white;"> <%= nombreU%> </span>
+                    <%
+                        }
+                    %>
+                    <img class="img-profile" style="width: 40px; height: 40px; margin-right: 20px" src="img/undraw_profile.svg">
+                </a>
+                <!-- Dropdown - User Information -->
+                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                     aria-labelledby="userDropdown">
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="SvLogin">
+                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                        Cerrar sesión
+                    </a>
+                </div>
+            </li>
         </nav>
     </div>
 </div>

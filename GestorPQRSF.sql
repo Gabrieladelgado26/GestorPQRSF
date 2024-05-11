@@ -39,13 +39,14 @@ CREATE TABLE solicitud(
     fecha DATE,
     descripcion TEXT, -- Descripción de la solicitud (opcional si la persona subio un archivo)
     archivo VARCHAR(100), -- Archivo (opcional si la descripción esta llena
+    respuesta TEXT,
     estado VARCHAR(20),
     FOREIGN KEY (idUsuario) REFERENCES usuarios(idUsuario) ON DELETE SET NULL, -- Llave foránea
     FOREIGN KEY (idTipoSolicitud) REFERENCES tipoSolicitud(idTipoSolicitud) ON DELETE SET NULL -- Llave foránea
 );
 
 INSERT INTO usuarios(nombre, apellido, cedula, telefono, correo, contrasena, rol)
-VALUES ('Gabriela', 'Delgado', '1081053738', '3114882004', 'gabrieladelgadoc07@gmail.com', '123', 'Administrador');
+VALUES ('Administrador', 'Sistema', '1081053738', '3114882004', 'gabrieladelgadoc07@gmail.com', '123', 'Administrador');
 
 DELIMITER //
 
@@ -67,17 +68,29 @@ DELIMITER ;
 
 DELIMITER //
 
+CREATE PROCEDURE eliminarUsuario(
+    IN p_idUsuario INT
+)
+BEGIN
+    DELETE FROM usuarios WHERE idUsuario = p_idUsuario;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
 CREATE PROCEDURE agregarSolicitud(
     IN p_idUsuario INT,
     IN p_idTipoSolicitud INT,
     IN p_fecha DATE,
     IN p_descripcion TEXT,
     IN p_archivo VARCHAR(100),
+    IN p_respuesta TEXT,
     IN p_estado VARCHAR(20)
 )
 BEGIN
-    INSERT INTO solicitud(idUsuario, idTipoSolicitud, fecha, descripcion, archivo, estado)
-	VALUES (p_idUsuario, p_idTipoSolicitud, p_fecha, p_descripcion, p_archivo, p_estado);
+    INSERT INTO solicitud(idUsuario, idTipoSolicitud, fecha, descripcion, archivo, respuesta, estado)
+	VALUES (p_idUsuario, p_idTipoSolicitud, p_fecha, p_descripcion, p_archivo, p_respuesta, p_estado);
 END //
 
 DELIMITER ;

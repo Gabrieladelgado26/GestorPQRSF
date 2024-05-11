@@ -23,13 +23,19 @@ public class SvEliminar extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
     }
 
+    Metodos metodos = new Metodos();
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
-    }
+        
+        System.out.println("Corriendo metodo para eliminar usuario");
+        int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+        
+        metodos.eliminarUsuario(idUsuario);
 
-    Metodos metodos = new Metodos();
+        response.sendRedirect("administrarUsuarios.jsp");
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

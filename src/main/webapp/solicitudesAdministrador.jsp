@@ -60,6 +60,11 @@
                     <div class="col-md-6 text-center text-md-left">
                         <h1 class="mb-4 mb-md-0 text-primary text-uppercase">Todas las solicitudes</h1>
                     </div>
+                    <div class="col-md-6 text-center text-md-right">
+                        <div class="d-inline-flex align-items-center">
+                            <a class="btn btn-agr" href="administrarUsuarios.jsp">Administrar usuarios</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -75,8 +80,7 @@
                     </div>
                 </div>
                 <div class="row pb-3 justify-content-center">
-                    <%
-                        Conexion conexion = new Conexion();
+                    <%                        Conexion conexion = new Conexion();
                         Metodos metodos = new Metodos();
                         Connection conn = conexion.establecerConexion();
                         PreparedStatement pstmt = null;
@@ -86,27 +90,31 @@
 
                         if (solicitudes.isEmpty()) {
                     %>
-                    <br><div class="no-tutorials d-flex text-center">No hay solicitudes registradas</div></br>
+                    <br><div class="no-tutorials d-flex justify-content-center">No hay solicitudes registradas</div></br>
                     <%
                     } else {
                     %>
                     <table class="table" style="margin-bottom: 50px">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Usuario</th>
-                                <th>Tipo de Solicitud</th>
-                                <th>Descripción</th>
-                                <th>Archivo</th>
-                                <th>Fecha</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
+                        <center>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Fecha</th>
+                                    <th>Nombre usuario</th>
+                                    <th>Tipo de Solicitud</th>
+                                    <th>Descripción</th>
+                                    <th>Archivo</th>
+                                    <th>Respuesta</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                        </center>
                         <tbody>
                             <%
                                 try {
 
-                                    String sql = "SELECT s.idSolicitud, u.nombre AS NombreUsuario, ts.tiposolicitud, s.fecha, s.descripcion, s.archivo, s.estado "
+                                    String sql = "SELECT s.idSolicitud, u.nombre AS NombreUsuario, ts.tiposolicitud, s.fecha, s.descripcion, s.archivo, s.estado, s.respuesta "
                                             + "FROM solicitud s INNER JOIN Usuarios u ON s.IdUsuario = u.IdUsuario INNER JOIN tipoSolicitud ts ON s.IdTipoSolicitud = ts.IdTipoSolicitud";
 
                                     pstmt = conn.prepareStatement(sql);
@@ -119,20 +127,32 @@
                                         String fecha = rs.getString("fecha");
                                         String descripcion = rs.getString("descripcion");
                                         String archivo = rs.getString("archivo");
+                                        String respuesta = rs.getString("respuesta");
                                         String estado = rs.getString("estado");
                             %>
                             <tr>
                                 <td><%= idSolicitud%></td>
+                                <td><%= fecha%></td>
                                 <td><%= nombreUsuario%></td>
                                 <td><%= tipoSolicitud%></td>
                                 <td><%= descripcion%></td>
-                                <td><%= archivo%></td>
-                                <td><%= fecha%></td>
-                                <td class="d-flex text-center">
+                                <td><% if (archivo != null) {%>
+                                    <a href="archivos/<%= archivo%>" target="_blank" class="btn btn-primary">
+                                        <i class="fas fa-file-download"></i> Abrir PDF
+                                    </a>
+                                    <% } else { %>
+                                    <!-- Botón deshabilitado si archivo es null -->
+                                    <button class="btn btn-primary" disabled>
+                                        <i class="fas fa-file-download"></i> Abrir PDF
+                                    </button>
+                                    <% }%>
+                                </td>
+                                <td><%= respuesta%></td>
+                                <td><%= estado%></td>
+                                <td>
                                     <!-- Acción con icono de bootstrap -->
                                     <div class="acciones text-center justify-content-centered">
-                                        <a href="#" class="btn btn-sm btn-outline-primary" data-idsolicitud="<%= idSolicitud%>" data-bs-toggle="modal" data-bs-target="#visualizar"><i class="fa-solid fa-eye fa-sm"></i></a>
-                                        <a href="#" class="btn btn-sm btn-outline-success" data-idsolicitud="<%= idSolicitud%>" data-bs-toggle="modal" data-bs-target="#editar"><i class="fa-solid fa-pen-clip fa-sm"></i></a>
+                                        <a href="#" class="btn btn-sm btn-outline-success" data-idsolicitud="<%= idSolicitud%>" data-bs-toggle="modal" data-bs-target="#editar"><i class="fas fa-reply fa-sm"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -159,7 +179,7 @@
                             %>
                         </tbody>
                     </table>
-                    <div class="col-md-12 mb-4">
+                    <br><div class="col-md-12 mb-4">
                         <nav aria-label="Page navigation">
                             <ul class="pagination justify-content-center mb-0">
                                 <li class="page-item disabled">
@@ -265,126 +285,6 @@
                 </div>
             </div>
         </div>
-
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                var button = document.getElementById("sort-button");
-                var idMostrado = 0;
-                button.addEventListener("click", function () {
-                    // Realizar una solicitud al servlet
-                    $.ajax({
-                        url: 'SvOrdenarTutoriales?id=' + idMostrado,
-                        method: 'POST',
-                        success: function (data) {
-                            location.reload(); // Recargar la página después de la eliminación exitosa del usuario
-                        },
-                        error: function () {
-                            console.log('Error al realizar la solicitud de visualización.');
-                        }
-                    });
-                });
-            });
-
-            document.getElementById('closeBtn').addEventListener('click', function () {
-                location.reload();
-            });
-
-            function redirectToUrl(url) {
-                window.open(url, '_blank');
-            }
-
-            function eliminar() {
-                $('#eliminar').modal('hide'); // Ocultar el modal de confirmación de eliminación
-                var idEliminado = $('#idSolicitudEliminar').val(); // Obtener la ID de la solicitud desde el campo oculto
-                $.ajax({
-                    url: 'SvEliminar?id=' + idEliminado, // URL del servlet que maneja la solicitud de eliminación
-                    method: 'POST', // Método HTTP utilizado (en este caso, POST)
-                    success: function (data) {
-                        location.reload(); // Recargar la página después de la eliminación exitosa de la solicitud
-                    },
-                    error: function () {
-                        console.log('Error al realizar la solicitud de eliminación.'); // Registrar un mensaje de error en la consola en caso de error
-                    }
-                });
-            }
-
-
-            // Función para mostrar el modal de confirmación de eliminación y almacenar el nombre del usuario a eliminar
-            var idEliminar;
-            function modalEliminar(id) {
-                $('#eliminar').modal('show'); // Mostrar el modal de confirmación de eliminación
-                idEliminar = id; // Almacenar el nombre del usuario a eliminar
-            }
-
-            function eliminar() {
-                $('#eliminar').modal('hide'); // Ocultar el modal de confirmación de eliminación
-                var idEliminado = idEliminar; // Obtener el nombre del usuario a eliminar
-                $.ajax({
-                    url: 'SvEliminar?id=' + idEliminado, // URL del servlet que maneja la solicitud de eliminación
-                    method: 'POST', // Método HTTP utilizado (en este caso, POST)
-                    success: function (data) {
-                        location.reload(); // Recargar la página después de la eliminación exitosa del usuario
-                    },
-                    error: function () {
-                        console.log('Error al realizar la solicitud de eliminación.'); // Registrar un mensaje de error en la consola en caso de error
-                    }
-                });
-            }    // Función para eliminar un usuario mediante una solicitud AJAX
-
-
-            var idMostrar;
-
-            function modalMostrar(id) {
-                $('#mostrar').modal('show');
-                idMostrar = id;
-            }
-
-            function mostrar() {
-                $('#mostrar').modal('hide');
-                var idMostrado = idMostrar;
-                $.ajax({
-                    url: 'SvMostrarTutorial?id=' + idMostrado,
-                    method: 'POST',
-                    success: function (data) {
-                        $('#tutorialDetails').html(data);
-                    },
-                    error: function () {
-                        console.log('Error al realizar la solicitud de visualización.');
-                    }
-                });
-            }
-
-
-            $(document).on('click', '#btnEditar', function () {
-                var idMostrado = $(this).attr('data-nombre'); // Obtiene el valor del atributo data-nombre del botón
-                $.ajax({
-                    url: 'SvMostrarInfoEditarTutorial?idTutorial=' + idMostrado,
-                    method: 'POST',
-                    success: function (data) {
-                        $('#tutorial-edit').html(data);
-                        $('#editar').modal('show'); // Muestra el modal después de obtener los datos
-                    },
-                    error: function () {
-                        console.log('Error al realizar la solicitud de visualización.');
-                    }
-                });
-            });
-
-            $(document).on('click', '#btnVisualizar', function () {
-                var idMostrado = $(this).attr('data-nombre'); // Obtiene el valor del atributo data-nombre del botón
-                $.ajax({
-                    url: 'SvVisualizar?idSolicitud=' + idMostrado,
-                    method: 'POST',
-                    success: function (data) {
-                        $('#visualizar').modal('show'); // Muestra el modal después de obtener los datos
-                        $('#solicitudDetails').html(data);
-                    },
-                    error: function () {
-                        console.log('Error al realizar la solicitud de visualización.');
-                    }
-                });
-            });
-        </script>
 
         <!-- Inclución de la plantilla footer -->
         <%@include file= "templates/footer.jsp" %>

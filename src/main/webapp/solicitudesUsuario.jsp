@@ -22,31 +22,24 @@
 
         <!-- Google Web Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Oswald:wght@400;500;600&display=swap" rel="stylesheet"> 
-
         <!-- Font Awesome -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
         <!-- Bootstrap JS and dependencies -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-
         <!-- jQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
         <!-- Flaticon Font -->
         <link href="lib/flaticon/font/flaticon.css" rel="stylesheet">
-
         <!-- Libraries Stylesheet -->
         <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
         <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
-
         <!-- Customized Bootstrap Stylesheet -->
         <link href="css/style.css" rel="stylesheet">
-
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-K2y4n6Oz6LIC7eD5KBUf+RmJsHi3q4E0YIy9/f3Xf0s=" crossorigin="anonymous"></script>
+        
     </head>
 
     <body>
@@ -62,7 +55,7 @@
                     </div>
                     <div class="col-md-6 text-center text-md-right">
                         <div class="d-inline-flex align-items-center">
-                            <a class="btn btn-primary" href="AgregarSolicitud.jsp">Agregar solicitud</a>
+                            <a class="btn btn-agr" href="AgregarSolicitud.jsp">Agregar solicitud</a>
                         </div>
                     </div>
                 </div>
@@ -80,24 +73,29 @@
                     </div>
                 </div>
                 <div class="row pb-3 justify-content-center">
-                    <%
-                        Metodos metodos = new Metodos();
-                        List<Solicitud> solicitudes = new ArrayList<>();
+                    <%  
                         String idUsuarioStr = (String) session.getAttribute("idUsuario");
                         int idUsuario = (idUsuarioStr != null) ? Integer.parseInt(idUsuarioStr) : 0;
                         Conexion conexion = new Conexion();
                         Connection conn = conexion.establecerConexion();
-                        solicitudes = metodos.obtenerSolicitudes(conn);
                         PreparedStatement pstmt = null;
                         ResultSet rs = null;
+                        String sqlu = "SELECT COUNT(*) AS numSolicitudes FROM solicitud WHERE idUsuario = ?";
+                        pstmt = conn.prepareStatement(sqlu);
+                        pstmt.setInt(1, idUsuario);
+                        rs = pstmt.executeQuery();
+                        rs.next();
+                        int numSolicitudes = rs.getInt("numSolicitudes");
 
-                        if (solicitudes.isEmpty()) { %>
+                        if (numSolicitudes == 0) { %>
                     <br>
-                    <div class="no-tutorials">No hay solicitudes registradas</div>
-                    </br>
+                    <div class="no-tutorials d-flex justify-content-center">Aún no has registrado ninguna solicitud</div>
+                    <br>
+
+
                     <% } else {
                         try {
-                            String sql = "SELECT idSolicitud, tipoSolicitud, fecha, descripcion, archivo, estado "
+                            String sql = "SELECT idSolicitud, tipoSolicitud, fecha, descripcion, archivo, respuesta, estado "
                                     + "FROM solicitud "
                                     + "INNER JOIN tipoSolicitud ON solicitud.idTipoSolicitud = tipoSolicitud.idTipoSolicitud "
                                     + "WHERE idUsuario = ? ORDER BY fecha DESC";
@@ -113,6 +111,7 @@
                                 String fecha = rs.getString("fecha");
                                 String descripcion = rs.getString("descripcion");
                                 String archivo = rs.getString("archivo");
+                                String respuesta = rs.getString("respuesta");
                                 String estado = rs.getString("estado");
                     %>
                     <div class="col-md-4 mb-4">
@@ -126,14 +125,16 @@
                                 <div class="">
                                     <div class="mr-6" style="margin-bottom: 10px"><i class="fa fa-folder text-primary"></i>  Archivo: <%= archivo%></div>
                                     <div class="mr-6"><i class="fa fa-comments text-primary" style="margin-bottom: 10px"></i>  Fecha: <%= fecha%></div>
-                                    <div class="mr-6"><i class="fa fa-user text-primary"></i>  Estado: <%= estado%></div>
+                                    <div class="mr-6"><i class="fa fa-check-circle text-primary"></i>  Estado: <%= estado%></div>
+                                    <div class="mr-6"><i class="fa fa-reply text-primary"></i>  Respuesta: <%= respuesta%></div>
                                 </div>
                                 <div class="d-flex justify-content-center">
                                     <a href="#" id="btnVisualizar" style="margin-top: 20px; margin-right: 5px;" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#visualizar" data-nombre=" <%= idSolicitud%>"><i class="fas fa-eye"></i></a>
                                     <a href="#" style="margin-top: 20px; margin-right: 5px;" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#editar" title="Editar"
-                                       data-idSolicitud="<%= idSolicitud%>"
-                                       data-fecha="<%= fecha%>"
-                                       data-descripcion="<%= descripcion%>">
+                                       data-idsolicitud="<%= idSolicitud%>"
+                                       data-tipoSolicitud="<%= tipoSolicitud%>"
+                                       data-descripcion="<%= descripcion%>"
+                                       data-rutaarchivo="<%= archivo%>">
                                         <i class="fas fa-edit"></i> 
                                     </a>
                                     <a href="#" style="margin-top: 20px;" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminar" onclick="setearIdSolicitud(<%= idSolicitud%>);"><i class="fas fa-trash"></i></a>
@@ -277,16 +278,14 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="fecha" class="col-form-label">Fecha: </label>
-                                    <input type="date" class="form-control" id="fecha" name="fecha" rows="3" required>
-                                </div>
-                                <div class="mb-3">
                                     <label for="descripcion" class="col-form-label">Descripcion: </label>
                                     <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
                                 </div>
                                 <div class="mb-3">
                                     <label for="archivo" class="col-form-label">Archivo:</label>
+                                    <input type="text" class="form-control" id="archivo_nombre" readonly>
                                     <input type="file" class="form-control" id="archivo" name="archivo">
+                                    <small class="text-muted">Si desea cambiar el archivo, seleccione uno nuevo.</small>
                                 </div>
                                 <hr>
                                 <div class="row">
@@ -302,22 +301,6 @@
                 </div>
             </div>
         </div>
-
-        <script>
-            $('#editar').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget);
-                var idSolicitud = button.data('idSolicitud'); // Obtener el ID de la solicitud del botón
-                var fecha = button.data('fecha'); // Obtener la fecha del botón
-                var descripcion = button.data('descripcion'); // Obtener la descripción del botón
-                                
-                // Establecer valores en los campos del formulario
-                var modal = $(this);
-                modal.find('.modal-body #idSolicitud').val(idSolicitud);
-                modal.find('.modal-body #fecha').val(fecha);
-                modal.find('.modal-body #descripcion').val(descripcion);
-
-            });
-        </script>
 
         <div class="modal fade" id="eliminar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="eliminarLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -350,48 +333,30 @@
 
         <script>
 
-            document.addEventListener("DOMContentLoaded", function () {
-                var button = document.getElementById("sort-button");
-                var idMostrado = 0;
-                button.addEventListener("click", function () {
-                    // Realizar una solicitud al servlet
-                    $.ajax({
-                        url: 'SvOrdenarTutoriales?id=' + idMostrado,
-                        method: 'POST',
-                        success: function (data) {
-                            location.reload(); // Recargar la página después de la eliminación exitosa del usuario
-                        },
-                        error: function () {
-                            console.log('Error al realizar la solicitud de visualización.');
-                        }
-                    });
-                });
-            });
+            $('#editar').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var idSolicitud = button.data('idsolicitud');
+                var tipoSolicitud = button.data('idtiposolicitud');
+                var descripcion = button.data('descripcion');
+                var archivo = button.data('rutaarchivo');
 
-            document.getElementById('closeBtn').addEventListener('click', function () {
-                location.reload();
-            });
+                // Establecer valores en los campos del formulario
+                var modal = $(this);
+                modal.find('#idSolicitud').val(idSolicitud);
+                modal.find('#descripcion').val(descripcion);
+                modal.find('#archivo_nombre').val(archivo);
+                modal.find('#idSolicitud').val(idSolicitud);
 
-            function redirectToUrl(url) {
-                window.open(url, '_blank');
-            }
-
-            $(document).on('click', '#btnVisualizar', function () {
-                var idMostrado = $(this).attr('data-nombre'); // Obtiene el valor del atributo data-nombre del botón
-                $.ajax({
-                    url: 'SvVisualizar?idSolicitud=' + idMostrado,
-                    method: 'POST',
-                    success: function (data) {
-                        $('#solicitudDetails').html(data);
-                        $('#visualizar').modal('show'); // Muestra el modal después de obtener los datos
-                    },
-                    error: function () {
-                        console.log('Error al realizar la solicitud de visualización.');
+                // Establecer el tipo de solicitud actual como seleccionado
+                modal.find('#tipoSolicitud option').each(function () {
+                    if ($(this).text() === tipoSolicitud) {
+                        $(this).prop('selected', true);
                     }
                 });
             });
-
         </script>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-K2y4n6Oz6LIC7eD5KBUf+RmJsHi3q4E0YIy9/f3Xf0s=" crossorigin="anonymous"></script>
 
         <!-- Inclución de la plantilla footer -->
         <%@include file= "templates/footer.jsp" %>

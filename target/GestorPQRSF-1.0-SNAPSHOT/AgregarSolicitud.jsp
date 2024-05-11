@@ -18,25 +18,25 @@
             <div class="row">
                 <div class="text-primary col-lg-5">
                     <div class="d-flex flex-column justify-content-center bg-primary h-100 p-5">
-                        <div class="d-inline-flex border border-secondary p-4 mb-4">
-                            <h1 class="flaticon-office font-weight-normal text-pri m-0 mr-3"></h1>
+                        <div class="d-inline-flex border border-primary p-4 mb-4">
+                            <h1 class="flaticon-office font-weight-normal text-primary m-0 mr-3"></h1>
                             <div class="d-flex flex-column">
-                                <h5 class="text-pri">Nuestra oficina</h5>
-                                <p class="m-0 text-pri">Calle 19 # 43</p>
+                                <h5 class="text-primary">Nuestra oficina</h5>
+                                <p class="m-0 text-primary">Calle 19 # 43</p>
                             </div>
                         </div>
-                        <div class="d-inline-flex border border-secondary p-4 mb-4">
-                            <h1 class="flaticon-email font-weight-normal text-pri m-0 mr-3"></h1>
+                        <div class="d-inline-flex border border-primary p-4 mb-4">
+                            <h1 class="flaticon-email font-weight-normal text-primary m-0 mr-3"></h1>
                             <div class="d-flex flex-column">
-                                <h5 class="text-pri">Nuestro Email</h5>
-                                <p class="m-0 text-pri">iManager@gmail.com</p>
+                                <h5 class="text-primary">Nuestro Email</h5>
+                                <p class="m-0 text-primary">iManager@gmail.com</p>
                             </div>
                         </div>
-                        <div class="d-inline-flex border border-secondary p-4">
-                            <h1 class="flaticon-telephone font-weight-normal text-pri m-0 mr-3"></h1>
+                        <div class="d-inline-flex border border-primary p-4">
+                            <h1 class="flaticon-telephone font-weight-normal text-primary m-0 mr-3"></h1>
                             <div class="d-flex flex-column">
-                                <h5 class="text-pri">Atención al cliente</h5>
-                                <p class="m-0 text-pri">+012 345 6789</p>
+                                <h5 class="text-primary">Atención al cliente</h5>
+                                <p class="m-0 text-primary">+012 345 6789</p>
                             </div>
                         </div>
                     </div>
@@ -44,7 +44,7 @@
                 <div class="col-lg-7 mb-5 my-lg-5 py-5 pl-lg-5">
                     <div class="contact-form">
                         <div id="success"></div>
-                        <form action="SvAgregarSolicitud" method="post">
+                        <form action="SvAgregarSolicitud" method="post" enctype="multipart/form-data">
                             <!-- Campo oculto para el ID del usuario obtenido de la sesión -->
                             <input type="hidden" name="idUsuario" value="<%= session.getAttribute("idUsuario")%>">
                             <div class="control-group">
@@ -71,10 +71,11 @@
                                 <textarea class="form-control p-4" rows="6" id="descripcion" name="descripcion" placeholder="Message" data-validation-required-message="Please enter your message"></textarea>
                                 <p class="help-block text-danger"></p>
                             </div>
-                            <div class="control-group">
-                                <input type="file" class="form-control p-4" id="archivo" name="archivo" accept="application/pdf" data-validation-required-message="Por favor seleccione un archivo PDF" />
+                            <div class="control-group" style="display: flex; align-items: center; justify-content: center;">
+                                <input type="file" style="height: 50px; display: flex; align-items: center; justify-content: center;" class="form-control p-8" id="archivo" name="archivo" accept="application/pdf" data-validation-required-message="Por favor seleccione un archivo PDF" />
                                 <p class="help-block text-danger"></p>
                             </div>
+
                             <div>
                                 <button class="btn btn-primary py-2 px-4" type="submit" id="sendMessageButton" style="margin-top: 10px">Enviar solicitud</button>
                             </div>

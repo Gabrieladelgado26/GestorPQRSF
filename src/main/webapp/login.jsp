@@ -13,11 +13,36 @@
         <link rel="stylesheet" href="recursos/login/css/bootstrap.min.css">
         <!-- Style -->
         <link rel="stylesheet" href="recursos/login/css/style.css">
-
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
         <title>Iniciar sesión</title>
     </head>
 
     <body>
+
+        <%
+            String toastr = (String) session.getAttribute("toastr");
+
+            // En caso de que se registre exitosamente
+            if (toastr != null && toastr.equals("usuarioAgregado")) {
+        %>
+        <!-- Llama a un método de JavaScript para mostrar una modal de registro exitoso -->
+        <script>
+            $(document).ready(function () {
+                usuarioAgregado();
+            });
+        </script>
+        <% } else if (toastr != null && toastr.equals("usuarioInexistente")) {
+        %>
+        <!-- Llama a un método de JavaScript para mostrar una modal de registro exitoso -->
+        <script>
+            $(document).ready(function () {
+                usuarioInexistente();
+            });
+        </script>
+        <% } session.removeAttribute("toastr");%>
+
+
         <div class="content">
             <div class="container" style="margin-top: 1px">
                 <div class="row">
@@ -35,7 +60,7 @@
                                 <br><form action="SvLogin" method="post">
                                     <div class="form-group first">
                                         <label for="usuario">Cedula de usuario</label>
-                                        <input type="text" class="form-control" id="cedula" name="cedula" required="required" data-validation-required-message="Porfavor ingrese su cedula" >
+                                        <input type="text" class="form-control" id="cedula" name="cedula" required="required" data-validation-required-message="Por favor ingrese su cédula" oninput="this.value = this.value.replace(/[^0-9]/g, '');" title="Ingrese solo números">
                                     </div>
                                     <div class="form-group last mb-4">
                                         <label for="contraseña">Contraseña</label>
@@ -90,7 +115,59 @@
                 </div>
             </div>
         </div>
+
+        <script>
+            // Función para mostrar una notificación Toastr de éxito cuando el registro fue exitoso
+            function usuarioAgregado() {
+                // Configurar opciones Toastr
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-center",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                };
+
+                // Mostrar una notificación Toastr de éxito
+                toastr.success('Se ha añadido exitosamente!', 'Registrado');
+            }
         
+            function usuarioInexistente() {
+                // Configurar opciones Toastr
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-center",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut",
+                    "toastClass": "toast toast-info"
+                };
+
+                // Mostrar una notificación Toastr de error
+                toastr.info('Los datos ingresados son incorrectos', 'Verificar');
+            }
+        </script>
+
         <script src="recursos/login/js/jquery-3.3.1.min.js"></script>
         <script src="recursos/login/js/popper.min.js"></script>
         <script src="recursos/login/js/bootstrap.min.js"></script>
@@ -98,59 +175,3 @@
 
     </body>
 </html>
-
-<!-- Modal para agregar un usuario -->
-        <div class="modal fade" id="modalAgregar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered custom-modal-size">
-                <div class="modal-content">
-                    <div class="popup">
-                        <div class="close-btn btn-close" data-bs-dismiss="modal">&times;</div>
-                        <div class="form">
-                            <h2>Registrate</h2><hr>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-element">
-                                        <label for="nombre">Nombre</label>
-                                        <input type="text" id="nombre" name="nombre" placeholder="Ingresa el nombre del tutorial" maxlength="20" required pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="No se permiten números">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-element">
-                                        <label for="prioridad">Prioridad</label>
-                                        <select class="form-control" id="prioridad" name="prioridad" required>
-                                            <option value="" disabled selected>Seleccione el nivel de prioridad</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                            <option value="10">10</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col">
-                                    <div class="form-element">
-                                        <label for="direccion">Url</label>
-                                        <input type="text" id="url" name="url" placeholder="Ingresa su url" maxlength="40" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-element">
-                                        <button type="submit">Registrar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>

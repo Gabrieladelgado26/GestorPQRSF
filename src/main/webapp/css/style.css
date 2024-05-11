@@ -2370,6 +2370,13 @@ fieldset:disabled a.btn {
   border-color: #031d45;
 }
 
+.btn-agr {
+  color: #DFB163;
+  background-color: #031d45;
+  border-color: #DFB163;
+  box-shadow: 0 0 0 0.2rem rgba(195, 156, 90, 0.5);
+}
+
 .btn-primary:hover {
   color: #fff;
   background-color: #031d45;

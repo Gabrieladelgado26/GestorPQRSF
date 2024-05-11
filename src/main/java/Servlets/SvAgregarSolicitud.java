@@ -1,25 +1,33 @@
 package Servlets;
 
 import com.mycompany.mundo.Metodos;
+import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 /**
  *
  * @author Gabriela Delgado
  */
 @WebServlet(name = "SvAgregarSolicitud", urlPatterns = {"/SvAgregarSolicitud"})
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2,
+        maxFileSize = 1024 * 1024 * 10,
+        maxRequestSize = 1024 * 1024 * 50)
+
 public class SvAgregarSolicitud extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -49,10 +57,30 @@ public class SvAgregarSolicitud extends HttpServlet {
             e.printStackTrace(); // Manejar la excepción adecuadamente
         }
         String descripcion = request.getParameter("descripcion");
-        String archivo = request.getParameter("archivo");
+        
+        
+        Part filePart = request.getPart("archivo");
+        
+        // Obtener el nombre del archivo
+        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
+
+        // Guardar el archivo en la carpeta "archivos"
+        String uploadPath = getServletContext().getRealPath("") + File.separator + "archivos";
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdir();
+        }
+        String filePath = uploadPath + File.separator + fileName;
+        try (InputStream fileContent = filePart.getInputStream()) {
+            Files.copy(fileContent, Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        // Ruta del archivo (ruta relativa)
+        String archivo = File.separator + fileName;
+        String respuesta = "Sin respuesta";
         String estado = "Por revisar";
 
-        Metodos.SvAgregarSolicitud(idUsuario, tipoSolicitud, fecha, descripcion, archivo, estado, session, response);
+        Metodos.agregarSolicitud(idUsuario, tipoSolicitud, fecha, descripcion, archivo, respuesta, estado, session, response);
     }
 
     /**
