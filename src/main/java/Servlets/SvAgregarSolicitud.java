@@ -44,8 +44,6 @@ public class SvAgregarSolicitud extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-
-        // Obtener los parámetros del formulario
         int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
         String tipoSolicitud = request.getParameter("tipoSolicitud");
         // Convertir la cadena de texto de la fecha a un objeto java.sql.Date
@@ -60,11 +58,7 @@ public class SvAgregarSolicitud extends HttpServlet {
         
         
         Part filePart = request.getPart("archivo");
-        
-        // Obtener el nombre del archivo
         String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
-
-        // Guardar el archivo en la carpeta "archivos"
         String uploadPath = getServletContext().getRealPath("") + File.separator + "archivos";
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
@@ -74,12 +68,10 @@ public class SvAgregarSolicitud extends HttpServlet {
         try (InputStream fileContent = filePart.getInputStream()) {
             Files.copy(fileContent, Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
         }
-
-        // Ruta del archivo (ruta relativa)
         String archivo = File.separator + fileName;
         String respuesta = "Sin respuesta";
         String estado = "Por revisar";
-
+        
         Metodos.agregarSolicitud(idUsuario, tipoSolicitud, fecha, descripcion, archivo, respuesta, estado, session, response);
     }
 

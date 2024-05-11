@@ -34,8 +34,6 @@ public class SvRegistro extends HttpServlet {
         System.out.println("Corriendo método de registro de usuario");
         Metodos metodos = new Metodos();
         HttpSession session = request.getSession();
-        
-        // Obtener los parámetros del formulario
         String nombre = request.getParameter("nombre");
         String apellido = request.getParameter("apellido");
         String cedula = request.getParameter("cedula");
@@ -45,8 +43,6 @@ public class SvRegistro extends HttpServlet {
         String rol = "Usuario";
 
         String toastr = "cedulaDuplicada";
-
-        // Verificar si la cédula ya está registrada
         if (metodos.cedulaDuplicada(cedula)) {
             session.setAttribute("toastr", toastr);
             response.sendRedirect("registro.jsp");

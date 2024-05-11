@@ -47,13 +47,9 @@ public class SvEditar extends HttpServlet {
             throws ServletException, IOException {
 
         System.out.println("Corriendo metodo para editar");
-
-        // Obtener los parámetros del formulario
         int idSolicitud = Integer.parseInt(request.getParameter("idSolicitud"));
         int idTipoSolicitud = Integer.parseInt(request.getParameter("tipoSolicitud"));
         String descripcion = request.getParameter("descripcion");
-
-        // Verificar si se ha adjuntado un nuevo archivo
         Part filePart = request.getPart("archivo");
         String rutaArchivo = null;
         if (filePart != null && filePart.getSize() > 0) {
@@ -68,18 +64,14 @@ public class SvEditar extends HttpServlet {
             try (InputStream fileContent = filePart.getInputStream()) {
                 Files.copy(fileContent, Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
             }
-
-            // Ruta del archivo (ruta relativa)
             rutaArchivo = File.separator + fileName;
         } else {
             rutaArchivo = request.getParameter("rutaArchivoAnterior");
         }
-
-        // Llamar a la función editarSolicitud
+        
         metodos.editarSolicitud(idSolicitud, idTipoSolicitud, descripcion, rutaArchivo);
 
-        // Redirigir a la página de inicio o mostrar un mensaje de éxito
-        response.sendRedirect("solicitudesUsuario.jsp"); // o mostrar un mensaje de éxito
+        response.sendRedirect("solicitudesUsuario.jsp");
     }
 
     /**
