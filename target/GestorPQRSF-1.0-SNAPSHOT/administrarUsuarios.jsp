@@ -19,40 +19,39 @@
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
         <meta content="Free HTML Templates" name="keywords">
         <meta content="Free HTML Templates" name="description">
-
-        <!-- Google Web Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Oswald:wght@400;500;600&display=swap" rel="stylesheet"> 
-
-        <!-- Font Awesome -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-
-        <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-        <!-- Bootstrap JS and dependencies -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-
-        <!-- jQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-        <!-- Flaticon Font -->
         <link href="lib/flaticon/font/flaticon.css" rel="stylesheet">
-
-        <!-- Libraries Stylesheet -->
         <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
         <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
-
-        <!-- Customized Bootstrap Stylesheet -->
         <link href="css/style.css" rel="stylesheet">
-
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     </head>
 
     <body>
 
         <%@include file= "templates/navbarAdministrador.jsp" %>
 
+        <%
+            String toastr = (String) session.getAttribute("toastr");
+
+            // En caso de que se registre exitosamente
+            if (toastr != null && toastr.equals("usuarioEditado")) {
+        %>
+        <!-- Llama a un método de JavaScript para mostrar una modal de registro exitoso -->
+        <script>
+            $(document).ready(function () {
+                usuarioEditado();
+            });
+        </script>
+        <% } session.removeAttribute("toastr");%>
+        
         <!-- Page Header Start -->
         <div class="container-fluid bg-primary py-2">
             <div class="container py-3">
@@ -102,15 +101,15 @@
                             <%
                                 try {
 
-                                    String sql = "SELECT u.idUsuario, u.nombre AS NombreUsuario, u.apellido, u.cedula, u.telefono, u.correo, u.rol "
+                                    String sql = "SELECT u.idUsuario, u.nombre, u.apellido, u.cedula, u.telefono, u.correo, u.rol "
                                             + "FROM usuarios u";
 
                                     pstmt = conn.prepareStatement(sql);
                                     rs = pstmt.executeQuery();
 
                                     while (rs.next()) {
-                                        String idUsuario = rs.getString("idUsuario");
-                                        String nombreUsuario = rs.getString("NombreUsuario");
+                                        String idusuario = rs.getString("idUsuario");
+                                        String nombre = rs.getString("nombre");
                                         String apellido = rs.getString("apellido");
                                         String cedula = rs.getString("cedula");
                                         String telefono = rs.getString("telefono");
@@ -118,8 +117,8 @@
                                         String rol = rs.getString("rol");
                             %>
                             <tr>
-                                <td><%= idUsuario%></td>
-                                <td><%= nombreUsuario%></td>
+                                <td><%= idusuario%></td>
+                                <td><%= nombre%></td>
                                 <td><%= apellido%></td>
                                 <td><%= cedula%></td>
                                 <td><%= telefono%></td>
@@ -127,7 +126,14 @@
                                 <td><%= rol%></td>
                                 <td>
                                     <div class="acciones  d-flex text-center justify-content-centered">
-                                        <a href="#" style="margin-right: 5px;" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#editar" title="Editar">
+                                        <a href="#" style="margin-right: 5px;" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#editar" title="Editar"
+                                           data-idusuario="<%= idusuario%>"
+                                           data-nombre="<%= nombre%>"
+                                           data-apellido="<%= apellido%>"
+                                           data-cedula="<%= cedula%>"
+                                           data-telefono="<%= telefono%>"
+                                           data-correo="<%= correo%>"
+                                           data-rol="<%= rol%>">
                                             <i class="fas fa-edit"></i> 
                                         </a>
                                         <%
@@ -135,7 +141,7 @@
                                             boolean esUsuarioNormal = rolU.equals("Usuario");
                                             if (esUsuarioNormal) {%>
                                         <!-- Mostrar el botón de eliminar solo si el usuario es un usuario normal -->
-                                        <a href="#" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminar" onclick="setearIdSolicitud(<%= idUsuario%>);"><i class="fas fa-trash"></i></a>
+                                        <a href="#" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminar" onclick="setearIdUsuario(<%= idusuario%>);"><i class="fas fa-trash"></i></a>
                                             <% } %>
                                     </div>
                                 </td>
@@ -227,8 +233,111 @@
         </div>
 
         <script>
-            function setearIdSolicitud(idUsuario) {
+            function setearIdUsuario(idUsuario) {
                 document.getElementById("idUsuarioEliminar").value = idUsuario;
+            }
+        </script>
+
+        <div class="modal fade" id="editar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editarLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered custom-modal-size">
+                <div class="modal-content">
+                    <div class="popup">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="editarLabel">Editar usuario</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="SvEditarUsuario" method="POST" id="editForm">
+                                <div class="mb-3">
+                                    <label for="idusuario" class="col-form-label">ID Usuario:</label>
+                                    <input type="text" class="form-control" id="idusuario" name="idusuario" value="<%= request.getParameter("idUsuario")%>" placeholder="ID del usuario" readonly required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="nombre" class="col-form-label">Nombre del usuario:</label>
+                                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del usuario" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="apellido" class="col-form-label">Apellido del usuario:</label>
+                                    <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Apellido del usuario" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="cedula" class="col-form-label">Cédula del usuario:</label>
+                                    <input type="text" class="form-control" id="cedula" name="cedula" placeholder="Cédula del usuario" readonly required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="telefono" class="col-form-label">Teléfono del usuario:</label>
+                                    <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Teléfono del usuario" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="correo" class="col-form-label">Correo del usuario:</label>
+                                    <input type="email" class="form-control" id="correo" name="correo" placeholder="Correo del usuario" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="rol" class="col-form-label">Editar rol del usuario:</label>
+                                    <select class="form-select" id="rol" name="rol" required>
+                                        <option value="" disabled selected>Rol del usuario</option>
+                                        <option value="Administrador">Administrador</option>
+                                        <option value="Usuario">Usuario</option>
+                                    </select>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-element d-flex justify-content-center">
+                                            <button type="submit" class="btn btn-primary" style="margin-bottom: 10px">Guardar cambios</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $('.acciones a.btn-outline-success').click(function () {
+                var idUsuario = $(this).data('idusuario');
+                var nombre = $(this).data('nombre');
+                var apellido = $(this).data('apellido');
+                var cedula = $(this).data('cedula');
+                var telefono = $(this).data('telefono');
+                var correo = $(this).data('correo');
+                var rol = $(this).data('rol');
+
+                $('#idusuario').val(idUsuario);
+                $('#nombre').val(nombre);
+                $('#apellido').val(apellido);
+                $('#cedula').val(cedula);
+                $('#telefono').val(telefono);
+                $('#correo').val(correo);
+                $('#rol').val(rol);
+
+                $('#responder').modal('show');
+            });
+            
+            function usuarioEditado() {
+                // Configurar opciones Toastr
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-center",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                };
+
+                // Mostrar una notificación Toastr de éxito
+                toastr.success('El usuario se ha editado exitosamente!', 'Editado');
             }
         </script>
 

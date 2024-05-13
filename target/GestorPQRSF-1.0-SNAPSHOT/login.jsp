@@ -40,8 +40,15 @@
                 usuarioInexistente();
             });
         </script>
+        <% } else if (toastr != null && toastr.equals("usuarioEditado")) {
+        %>
+        <!-- Llama a un método de JavaScript para mostrar una modal de registro exitoso -->
+        <script>
+            $(document).ready(function () {
+                cambioRol();
+            });
+        </script>
         <% } session.removeAttribute("toastr");%>
-
 
         <div class="content">
             <div class="container" style="margin-top: 1px">
@@ -141,7 +148,7 @@
                 // Mostrar una notificación Toastr de éxito
                 toastr.success('Se ha añadido exitosamente!', 'Registrado');
             }
-        
+
             function usuarioInexistente() {
                 // Configurar opciones Toastr
                 toastr.options = {
@@ -165,6 +172,31 @@
 
                 // Mostrar una notificación Toastr de error
                 toastr.info('Los datos ingresados son incorrectos', 'Verificar');
+            }
+            
+            function cambioRol() {
+                // Configurar opciones Toastr
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-center",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut",
+                    "toastClass": "toast toast-info"
+                };
+
+                // Mostrar una notificación Toastr de error
+                toastr.info('Haz cambiado el rol a usuario, inicia sesión nuevamente', 'Seguridad');
             }
         </script>
 

@@ -114,16 +114,18 @@
                             <%
                                 try {
 
-                                    String sql = "SELECT s.idSolicitud, u.nombre AS NombreUsuario, ts.tiposolicitud, s.fecha, s.descripcion, s.archivo, s.estado, s.respuesta "
-                                            + "FROM solicitud s INNER JOIN Usuarios u ON s.IdUsuario = u.IdUsuario INNER JOIN tipoSolicitud ts ON s.IdTipoSolicitud = ts.IdTipoSolicitud";
+                                    String sql = "SELECT s.idSolicitud, u.nombre, u.apellido, u.correo, ts.tipoSolicitud, s.fecha, s.descripcion, s.archivo, s.respuesta, s.estado "
+                                            + "FROM solicitud s INNER JOIN usuarios u ON s.idUsuario = u.idUsuario INNER JOIN tipoSolicitud ts ON s.idTipoSolicitud = ts.idTipoSolicitud";
 
                                     pstmt = conn.prepareStatement(sql);
                                     rs = pstmt.executeQuery();
 
                                     while (rs.next()) {
                                         String idSolicitud = rs.getString("idSolicitud");
-                                        String nombreUsuario = rs.getString("NombreUsuario");
-                                        String tipoSolicitud = rs.getString("tiposolicitud");
+                                        String nombre = rs.getString("nombre");
+                                        String apellido = rs.getString("apellido");
+                                        String correo = rs.getString("correo");
+                                        String tipoSolicitud = rs.getString("tipoSolicitud");
                                         String fecha = rs.getString("fecha");
                                         String descripcion = rs.getString("descripcion");
                                         String archivo = rs.getString("archivo");
@@ -133,17 +135,17 @@
                             <tr>
                                 <td><%= idSolicitud%></td>
                                 <td><%= fecha%></td>
-                                <td><%= nombreUsuario%></td>
+                                <td><%= nombre%></td>
                                 <td><%= tipoSolicitud%></td>
                                 <td><%= descripcion%></td>
                                 <td><% if (archivo != null) {%>
                                     <a href="archivos/<%= archivo%>" target="_blank" class="btn btn-primary">
-                                        <i class="fas fa-file-download"></i> Abrir PDF
+                                        <i class="fas fa-file-download"></i>Abrir
                                     </a>
                                     <% } else { %>
                                     <!-- Botón deshabilitado si archivo es null -->
                                     <button class="btn btn-primary" disabled>
-                                        <i class="fas fa-file-download"></i> Sin PDF
+                                        <i class="fas fa-file-download"></i>Sin PDF
                                     </button>
                                     <% }%>
                                 </td>
@@ -152,7 +154,16 @@
                                 <td>
                                     <!-- Acción con icono de bootstrap -->
                                     <div class="acciones text-center justify-content-centered">
-                                        <a href="#" class="btn btn-sm btn-outline-success" data-idsolicitud="<%= idSolicitud%>" data-bs-toggle="modal" data-bs-target="#editar"><i class="fas fa-reply fa-sm"></i></a>
+                                        <a href="#" id="btnVisualizar" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#visualizar" data-nombre=" <%= idSolicitud%>"><i class="fas fa-eye"></i></a>
+                                        <a href="#" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#responder" 
+                                           data-idsolicitud="<%= idSolicitud%>"
+                                           data-tipoSolicitud="<%= tipoSolicitud%>"
+                                           data-nombre="<%= nombre%>"
+                                           data-apellido="<%= apellido%>"
+                                           data-correo="<%= correo%>"
+                                           data-fecha="<%= fecha%>"
+                                           data-descripcion="<%= descripcion%>">
+                                            <i class="fas fa-reply fa-sm"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -238,53 +249,64 @@
             </div>
         </div>
 
-        <form action="SvEditar" method="POST">
-            <div class="modal fade" id="editar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editarLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered custom-modal-size">
-                    <div class="modal-content">
-                        <div class="popup">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Editar solicitud</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="form">
-                                <!-- Aquí se mostrará la información del tutorial -->
-                                <div id="solicitud-edit"></div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="form-element d-flex justify-content-center">
-                                            <button type="submit" class="btn btn-secondary" style="margin-bottom: 10px">Editar</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
 
-        <div class="modal fade" id="eliminar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="eliminarLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+        <div class="modal fade" id="responder" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editarLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered custom-modal-size">
                 <div class="modal-content">
                     <div class="popup">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Eliminar solicitud</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Responder solicitud</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="form">
-                            <p class="text-center">¿Estas seguro que quieres eliminar esta solicitud?</p>
-                            <div class="form-element justify-content-center" style="display: flex; justify-content: space-between;">
-                                <input type="hidden" id="idSolicitudEliminar" name="idSolicitudEliminar">
-                                <button type="button" class="btn btn-secondary" style="margin-bottom: 15px" data-bs-dismiss="modal" style="margin-right: 10px;">Cancelar</button>
-                                <a class="btn btn-lg btn-danger" style="margin-left: 10px; margin-bottom: 15px" onclick="eliminar()">Eliminar</a>
-                            </div>
+                        <div class="modal-body">
+                            <form action="SvRespuesta" method="POST">
+                                <div class="mb-3">
+                                    <label for="respuesta" class="form-label">Responde a la solicitud:</label>
+                                    <textarea class="form-control" id="respuesta" name="respuesta" rows="3" required></textarea>
+                                </div>
+                                <input type="hidden" id="idSolicitud" name="idSolicitud">
+                                <input type="hidden" id="tipoSolicitud" name="tipoSolicitud">
+                                <input type="hidden" id="nombre" name="nombre">
+                                <input type="hidden" id="apellido" name="apellido">
+                                <input type="hidden" id="correo" name="correo">
+                                <input type="hidden" id="fecha" name="fecha">
+                                <input type="hidden" id="descripcion" name="descripcion">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-element d-flex justify-content-center">
+                                            <button type="submit" class="btn btn-secondary" style="margin-bottom: 10px">Enviar respuesta</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <script>
+            $('.acciones .btn-outline-success').click(function () {
+                // Obtener los datos de la solicitud seleccionada
+                var idSolicitud = $(this).data('idsolicitud');
+                var tipoSolicitud = $(this).data('tiposolicitud');
+                var nombre = $(this).data('nombre');
+                var apellido = $(this).data('apellido');
+                var correo = $(this).data('correo');
+                var fecha = $(this).data('fecha');
+                var descripcion = $(this).data('descripcion');
+
+                $('#idSolicitud').val(idSolicitud);
+                $('#tipoSolicitud').val(tipoSolicitud);
+                $('#nombre').val(nombre);
+                $('#apellido').val(apellido);
+                $('#correo').val(correo);
+                $('#fecha').val(fecha);
+                $('#descripcion').val(descripcion);
+                
+                $('#responder').modal('show');
+            });
+        </script>
 
         <!-- Inclución de la plantilla footer -->
         <%@include file= "templates/footer.jsp" %>

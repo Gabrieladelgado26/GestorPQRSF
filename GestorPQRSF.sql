@@ -1,7 +1,7 @@
 -- Verifica si la base de datos "Gestor_PQRS" existe
 DROP DATABASE IF EXISTS gestor_PQRSF;
 
--- Si la base de datos no existe, créala
+-- Si la base de datos no existe, créala
 CREATE DATABASE IF NOT EXISTS gestor_PQRSF;
 
 -- Selecciona la base de datos recién creada para realizar operaciones en ella
@@ -62,6 +62,24 @@ CREATE PROCEDURE agregarUsuario(
 BEGIN
     INSERT INTO usuarios(nombre, apellido, cedula, telefono, correo, contrasena, rol)
 	VALUES (p_nombre, p_apellido, p_cedula, p_telefono, p_correo, p_contrasena, p_rol);
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE editarUsuario(
+    IN p_idUsuario INT,
+    IN p_nombre VARCHAR(100),
+    IN p_apellido VARCHAR(100),
+    IN p_telefono VARCHAR(20),
+    IN p_correo VARCHAR(100),
+    IN p_rol ENUM('Administrador', 'Usuario')
+)
+BEGIN
+    UPDATE usuarios
+    SET nombre = p_nombre, apellido = p_apellido, telefono = p_telefono, correo = p_correo, rol = p_rol
+    WHERE idUsuario = p_idUsuario;
 END //
 
 DELIMITER ;

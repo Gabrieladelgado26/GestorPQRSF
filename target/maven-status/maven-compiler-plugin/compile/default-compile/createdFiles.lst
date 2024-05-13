@@ -3,12 +3,15 @@ com\mycompany\mundo\Solicitud.class
 com\mycompany\mundo\TipoSolicitud.class
 com\mycompany\mundo\JAXRSConfiguration.class
 Servlets\SvAgregarSolicitud.class
+Servlets\SvRespuesta.class
+com\mycompany\mundo\Metodos$2.class
 Servlets\SvEditar.class
 Servlets\SvLogin.class
 com\mycompany\mundo\Metodos$1.class
 Servlets\SvVisualizar.class
 com\mycompany\mundo\resources\JavaEE8Resource.class
 Servlets\SvRegistro.class
+Servlets\SvEditarUsuario.class
 Servlets\SvEliminar.class
 com\mycompany\mundo\Usuario.class
 com\mycompany\mundo\Conexion.class

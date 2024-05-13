@@ -38,7 +38,7 @@ public class SvLogin extends HttpServlet {
         if (session != null) {
             session.invalidate(); // Invalidar la sesión actual
         } else {
-            System.out.println("NO SE PUDO CERRAR LA SESIÓN");
+            System.out.println("Error");
         }
 
         // Redirigir a la página de inicio

@@ -39,7 +39,7 @@ public class SvVisualizar extends HttpServlet {
 
         int idSolicitud = Integer.parseInt(request.getParameter("idSolicitud"));
 
-        metodo.visualizar(idSolicitud, metodo, response);
+        // metodo.visualizar(idSolicitud, metodo, response);
     }
 
     /**

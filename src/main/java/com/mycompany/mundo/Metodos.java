@@ -1,9 +1,6 @@
 package com.mycompany.mundo;
 
-import Servlets.SvEditar;
-import Servlets.SvVisualizar;
 import java.io.IOException;
-import java.net.Authenticator;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
@@ -12,9 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.mail.*;
@@ -74,7 +68,7 @@ public class Metodos {
                 String toastr = "usuarioAgregado";
                 session.setAttribute("toastr", toastr);
                 System.out.println("Redireccionando a login.jsp");
-                enviarCorreoInsertarPQRS(nombre, apellido, cedula, telefono, correo);
+                enviarCorreoRegistroExitoso(nombre, apellido, cedula, telefono, correo);
                 response.sendRedirect("login.jsp");
 
             } catch (SQLException e) {
@@ -84,6 +78,138 @@ public class Metodos {
         } else {
             // Manejar el caso en que no se pueda obtener una conexión a la base de datos
             response.getWriter().println("No se pudo establecer una conexión a la base de datos."); // Esto mostrará un mensaje de error en la página
+        }
+    }
+
+    public static void editarUsuario(int idUsuario, String nombre, String apellido, String telefono, String correo, String rol) {
+        PreparedStatement pstmt = null;
+        Conexion conexion = new Conexion();
+        Connection conn = conexion.establecerConexion();
+        try {
+            System.out.println("Entre a la edición");
+            String sql = "UPDATE usuarios SET nombre =?, apellido =?, telefono =?, correo =?, rol =? WHERE idUsuario =?";
+            pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, nombre);
+            pstmt.setString(2, apellido);
+            pstmt.setString(3, telefono);
+            pstmt.setString(4, correo);
+            pstmt.setString(5, rol);
+            pstmt.setInt(6, idUsuario);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Cerrar la conexión y liberar los recursos
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void eliminarUsuario(int idUsuario) throws IOException {
+        Conexion conexion = new Conexion();
+        Connection conn = conexion.establecerConexion();
+        if (conn != null) {
+
+            String sql = "{CALL eliminarUsuario(?)}";
+            try (CallableStatement stmt = conn.prepareCall(sql)) {
+                stmt.setInt(1, idUsuario);
+                stmt.execute();
+                System.out.println("Si llegue");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public String[] iniciarSesion(String cedula, String contrasena) {
+        Conexion conexion = new Conexion();
+        Connection conn = conexion.establecerConexion();
+        String[] datosUsuario = null;
+
+        try {
+            String sql = "SELECT IdUsuario, rol, nombre FROM usuarios WHERE cedula = ? AND contrasena = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, cedula);
+            pstmt.setString(2, contrasena);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                // Si las credenciales son válidas, obtener el id, rol y nombre del usuario
+                int idUsuario = rs.getInt("idUsuario");
+                System.out.println("ID del usuario en sesión: " + idUsuario);
+                String rol = rs.getString("rol");
+                String nombre = rs.getString("nombre");
+                datosUsuario = new String[]{String.valueOf(idUsuario), rol, nombre};
+            }
+            rs.close();
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("Error al iniciar sesión: " + e.getMessage());
+        }
+
+        return datosUsuario;
+    }
+
+    public static void enviarCorreoRegistroExitoso(String nombre, String apellido, String cedula, String telefono, String correo) {
+        // Configuración del servidor de correo
+        String correoRemitente = "gestorpqrsf@gmail.com";
+        String passwordRemitente = "z x g f y n n f i w v t a c d d";
+        String host = "smtp.gmail.com";
+        int puerto = 587;
+
+        // Propiedades de la sesión
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.port", puerto);
+
+        // Autenticación
+        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(correoRemitente, passwordRemitente);
+            }
+        });
+
+        try {
+            // Crear mensaje
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(correoRemitente));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(correo));
+            message.setSubject("Registro Exitoso en el Sistema de PQRSF");
+
+            String textoMensaje = "          Bienvenid@ a nuestro sistema          ";
+            //textoMensaje += "<img src=\"img/correoR.png\" alt=\"Imagen\">";
+            textoMensaje += "Estimado/a, " + nombre + "<br><br> Su registro se ha realizado correctamente en nuestro sistema.<br><br>";
+            textoMensaje += "<h2>Detalles deL registro:</h2>\n";
+            textoMensaje += "<p><strong>Nombre:</strong> " + nombre + "</p>\n";
+            textoMensaje += "<p><strong>Apellido:</strong> " + apellido + "</p>\n";
+            textoMensaje += "<p><strong>Cedula:</strong> " + cedula + "</p>\n";
+            textoMensaje += "<p><strong>Teléfono:</strong> " + telefono + "</p>\n";
+            textoMensaje += "<p><strong>Email:</strong> " + correo + "</p>\n";
+
+            textoMensaje += "<br><p>Atentamente,<br>El equipo de soporte.</p>\n";
+            message.setContent(textoMensaje, "text/html; charset=utf-8");
+
+            // Enviar correo
+            Transport.send(message);
+
+            System.out.println("Correo de registro exitoso enviado a: " + correo);
+        } catch (MessagingException e) {
+            System.out.println("Error al enviar el correo de registro exitoso: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -163,7 +289,7 @@ public class Metodos {
             System.out.println("Entre a la edición");
             String sql = "UPDATE solicitud SET idTipoSolicitud =?, descripcion =?, archivo =? WHERE idSolicitud =?";
             pstmt = conn.prepareStatement(sql);
-            
+
             pstmt.setInt(1, p_idTipoSolicitud);
             pstmt.setString(2, p_descripcion);
             pstmt.setString(3, p_archivo);
@@ -188,120 +314,6 @@ public class Metodos {
         }
     }
 
-    public Solicitud buscarSolicitudPorId(int id, Connection conn) {
-
-        Solicitud solicitud = new Solicitud();
-
-        try {
-            // Consulta SQL con LEFT JOIN
-            String sql = "SELECT s.idSolicitud, s.idUsuario, s.idTipoSolicitud, s.fecha, s.descripcion, s.archivo, s.estado \n"
-                    + "FROM solicitud s \n"
-                    + "LEFT JOIN tiposolicitud t ON s.idTipoSolicitud = t.idTipoSolicitud \n"
-                    + "WHERE s.idSolicitud = ?";
-
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                solicitud.setIdSolicitud(rs.getInt("idSolicitud"));
-                solicitud.setIdPersona(rs.getInt("idUsuario"));
-                solicitud.setTipoSolicitud(rs.getString("tipoSolicitud"));
-
-                Date fecha = rs.getDate("fecha");
-                String descripcion = rs.getString("descripcion");
-                String archivo = rs.getString("archivo");
-                // Verificar si la categoría es null y manejarlo en consecuencia
-                if (descripcion == null) {
-                    descripcion = "Diam amet eos at no eos sit, amet rebum ipsum clita stet, diam sea est diam eos, sit vero stet justo";
-                }
-                if (archivo == null) {
-                    archivo = "peticion.pdf";
-                }
-                solicitud.setFecha(fecha);
-                solicitud.setDescripcion(descripcion);
-                solicitud.setArchivo(archivo);
-
-                solicitud.setEstado(rs.getString("estado"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return solicitud;
-    }
-
-    public String generarSolicitudHtml(Solicitud solicitud) {
-        StringBuilder resultado = new StringBuilder();
-
-        resultado.append("<h2>Información del tutorial</h2>");
-        resultado.append("<hr>");
-        resultado.append("<div class=\"row\">");
-        resultado.append("<div class=\"col\">");
-        resultado.append("<div class=\"form-element\">");
-        resultado.append("<label class='titu' for=\"nombre\">Tipo de solicitud</label>");
-        resultado.append("<p class='dato'>" + solicitud.getTipoSolicitud() + "</p>");
-        resultado.append("<hr class='linea'>");
-        resultado.append("</div>");
-        resultado.append("</div>");
-        resultado.append("<div class=\"col\">");
-        resultado.append("<div class=\"form-element\">");
-        resultado.append("<label class='titu' for=\"apellido\">Descripción</label>");
-        resultado.append("<p class='dato'>" + solicitud.getDescripcion() + "</p>");
-        resultado.append("<hr class='linea'>");
-        resultado.append("</div>");
-        resultado.append("</div>");
-        resultado.append("</div>");
-        resultado.append("<div class=\"row\">");
-        resultado.append("<div class=\"col\">");
-        resultado.append("<div class=\"form-element\">");
-        resultado.append("<label class='titu' for=\"celular\">Prioridad</label>");
-        resultado.append("<p class='dato'>" + solicitud.getFecha() + "</p>");
-        resultado.append("<hr class='linea'>");
-        resultado.append("</div>");
-        resultado.append("</div>");
-        resultado.append("<div class=\"col\">");
-        resultado.append("<div class=\"form-element\">");
-        resultado.append("<label class='titu' for=\"direccion\">Url</label>");
-        resultado.append("<p class='dato link' onclick=\"redirectToUrl('" + solicitud.getArchivo() + "')\">Link</p>");
-        resultado.append("<hr class='linea'>");
-        resultado.append("</div>");
-        resultado.append("</div>");
-        resultado.append("</div>");
-        resultado.append("<div class=\"row\">");
-        resultado.append("<div class=\"col\">");
-        resultado.append("</div>");
-        resultado.append("</div>");
-        resultado.append("</div>");
-
-        return resultado.toString();
-    }
-
-    public static void visualizar(int idSolicitud, Metodos metodo, HttpServletResponse response) throws IOException {
-        Solicitud solicitud = new Solicitud();
-        Conexion conexion = new Conexion();
-        Connection conn = conexion.establecerConexion();
-        solicitud = metodo.buscarSolicitudPorId(idSolicitud, conn);
-
-        String formularioHTML = metodo.generarSolicitudHtml(solicitud);
-
-        String nuevoEstado = "Revisado";
-
-        String sql = "CALL editarEstadoSolicitud(?, ?)";
-        try (CallableStatement stmt = conn.prepareCall(sql)) {
-            stmt.setInt(1, idSolicitud);
-            stmt.setString(2, nuevoEstado);
-
-            stmt.execute();
-        } catch (SQLException ex) {
-            Logger.getLogger(SvVisualizar.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        // Se configura el tipo de contenido de la respuesta como "text/html"
-        response.setContentType("text/html");
-        // Se escribe la información del contacto en el cuerpo de la respuesta
-        response.getWriter().write(formularioHTML);
-    }
-
     public static void eliminarSolicitud(int idSolicitud) throws IOException {
         Conexion conexion = new Conexion();
         Connection conn = conexion.establecerConexion();
@@ -318,53 +330,44 @@ public class Metodos {
         }
     }
 
-    public static void eliminarUsuario(int idUsuario) throws IOException {
+    public static void responderSolicitud(int idSolicitud, String respuesta, String tipoSolicitud, String nombre, String apellido, String correo, Date fecha, String descripcion, String estado) {
         Conexion conexion = new Conexion();
         Connection conn = conexion.establecerConexion();
-        if (conn != null) {
-
-            String sql = "{CALL eliminarUsuario(?)}";
-            try (CallableStatement stmt = conn.prepareCall(sql)) {
-                stmt.setInt(1, idUsuario);
-                stmt.execute();
-                System.out.println("Si llegue");
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public String[] iniciarSesion(String cedula, String contrasena) {
-        Conexion conexion = new Conexion();
-        Connection conn = conexion.establecerConexion();
-        String[] datosUsuario = null;
+        PreparedStatement pstmt = null;
 
         try {
-            String sql = "SELECT IdUsuario, rol, nombre FROM usuarios WHERE cedula = ? AND contrasena = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, cedula);
-            pstmt.setString(2, contrasena);
-            ResultSet rs = pstmt.executeQuery();
+            String sql = "UPDATE solicitud SET respuesta = ?, estado = ? WHERE idSolicitud = ?";
+            pstmt = conn.prepareStatement(sql);
 
-            if (rs.next()) {
-                // Si las credenciales son válidas, obtener el id, rol y nombre del usuario
-                int idUsuario = rs.getInt("idUsuario");
-                System.out.println("ID del usuario en sesión: " + idUsuario);
-                String rol = rs.getString("rol");
-                String nombre = rs.getString("nombre");
-                datosUsuario = new String[]{String.valueOf(idUsuario), rol, nombre};
-            }
-            rs.close();
-            pstmt.close();
-            conn.close();
+            pstmt.setString(1, respuesta);
+            pstmt.setString(2, estado);
+            pstmt.setInt(3, idSolicitud);
+
+            pstmt.executeUpdate();
+
+            enviarCorreoSolicitudRespondida(tipoSolicitud, nombre, apellido, correo, fecha, descripcion, respuesta, estado);
+
         } catch (SQLException e) {
-            System.out.println("Error al iniciar sesión: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-
-        return datosUsuario;
     }
 
-    public static void enviarCorreoInsertarPQRS(String nombre, String apellido, String cedula, String telefono, String correo) {
+    public static void enviarCorreoSolicitudRespondida(String tipoSolicitud, String nombre, String apellido, String correo, Date fecha, String descripcion, String respuesta, String estado) {
         // Configuración del servidor de correo
         String correoRemitente = "gestorpqrsf@gmail.com";
         String passwordRemitente = "z x g f y n n f i w v t a c d d";
@@ -390,18 +393,20 @@ public class Metodos {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(correoRemitente));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(correo));
-            message.setSubject("Registro Exitoso en el Sistema de PQRSF");
+            message.setSubject("Su " + tipoSolicitud + " ha sido respondida");
 
             // Construir el texto del mensaje con los datos del formulario
-            String textoMensaje = "Estimado/a, " + nombre + "<br><br> Su registro se ha realizado correctamente en nuestro sistema.<br><br>";
+            String textoMensaje = "Estimado/a, " + nombre + "" + apellido + "<br><br> Su solicitud ha sido respondida por nuestro equipo de servicio al cliente, le agradecemos por tomarse el tiempo de escribirnos, esperamos que esta respesta resuelva du solcicitud.<br><br>";
             textoMensaje += "<h2>Detalles deL registro:</h2>\n";
             textoMensaje += "<p><strong>Nombre:</strong> " + nombre + "</p>\n";
             textoMensaje += "<p><strong>Apellido:</strong> " + apellido + "</p>\n";
-            textoMensaje += "<p><strong>Cedula:</strong> " + cedula + "</p>\n";
-            textoMensaje += "<p><strong>Teléfono:</strong> " + telefono + "</p>\n";
-            textoMensaje += "<p><strong>Email:</strong> " + correo + "</p>\n";
+            textoMensaje += "<p><strong>Fecha en la que se realizo la solicitud:</strong> " + fecha + "</p>\n";
+            textoMensaje += "<p><strong>Descripción:</strong> " + descripcion + "</p>\n";
+            textoMensaje += "<p><strong>Estado de la solicitud:</strong> " + estado + "</p>\n";
 
-            textoMensaje += "<br><p>Atentamente,<br>El equipo de soporte.</p>\n";
+            textoMensaje += "<p><strong>Respuesta a la solicitud:</strong> " + respuesta + "</p>\n";
+
+            textoMensaje += "<br><p>Atentamente, el equipo de atención al cliente.</p>\n";
             message.setContent(textoMensaje, "text/html; charset=utf-8");
 
             // Enviar correo

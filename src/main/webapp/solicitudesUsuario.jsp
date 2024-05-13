@@ -284,7 +284,7 @@
                                 <div class="mb-3">
                                     <label for="archivo" class="col-form-label">Archivo:</label>
                                     <input type="text" class="form-control" id="archivo_nombre" readonly>
-                                    <input type="file" class="form-control" id="archivo" name="archivo">
+                                    <input type="file" class="form-control" id="archivo" name="archivo" accept="application/pdf" data-validation-required-message="Por favor seleccione un archivo PDF">
                                     <small class="text-muted">Si desea cambiar el archivo, seleccione uno nuevo.</small>
                                 </div>
                                 <hr>

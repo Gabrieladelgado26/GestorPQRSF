@@ -15,7 +15,7 @@
                         <div class="p-3" style="max-width: 800px;">
                             <h4 class="text-primary text-uppercase font-weight-normal mb-md-3">Sistema de Peticiones, Quejas, Reclamos, Sugerencias y Felicitaciones</h4>
                             <h3 class="display-3 text-white mb-md-4">Sistema gestor de PQRSF</h3>
-                            <a href="#mas" class="btn btn-pri py-md-3 px-md-5 mt-2 mt-md-4">Leer Mas</a>
+                            <a href="#mas" class="btn btn-primary py-md-3 px-md-5 mt-2 mt-md-4">Leer Mas</a>
                         </div>
                     </div>
                 </div>
@@ -25,18 +25,18 @@
                         <div class="p-3" style="max-width: 800px;">
                             <h4 class="text-primary text-uppercase font-weight-normal mb-md-3">Sistema de Peticiones, Quejas, Reclamos, Sugerencias y Felicitaciones</h4>
                             <h3 class="display-3 text-white mb-md-4">Al servicio de tus necesidades</h3>
-                            <a href="#mas" class="btn btn-pri py-md-3 px-md-5 mt-2 mt-md-4">Leer Mas</a>
+                            <a href="#mas" class="btn btn-primary py-md-3 px-md-5 mt-2 mt-md-4">Leer Mas</a>
                         </div>
                     </div>
                 </div>
             </div>
             <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
-                <div class="btn text-pri" style="width: 45px; height: 45px;">
+                <div class="btn btn-primary" style="width: 45px; height: 45px;">
                     <span class="carousel-control-prev-icon mb-n2"></span>
                 </div>
             </a>
             <a class="carousel-control-next" href="#header-carousel" data-slide="next">
-                <div class="btn btn-pri" style="width: 45px; height: 45px;">
+                <div class="btn btn-primary" style="width: 45px; height: 45px;">
                     <span class="carousel-control-next-icon mb-n2"></span>
                 </div>
             </a>
