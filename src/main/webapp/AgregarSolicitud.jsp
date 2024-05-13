@@ -1,3 +1,6 @@
+<%@page import="java.sql.SQLException"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.PreparedStatement"%>
 <%@page import="com.mycompany.mundo.Metodos"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.ArrayList"%>
@@ -49,16 +52,43 @@
                             <input type="hidden" name="idUsuario" value="<%= session.getAttribute("idUsuario")%>">
                             <div class="control-group">
                                 <select type="text" class="form-control" id="tipoSolicitud" name="tipoSolicitud" required="required" data-validation-required-message="Porfavor ingrese el tipo de solicitud a realizar">
-                                    <option value="" disabled selected>Seleccione el tipo de solicitud</option>
+                                    <option value="" selected disabled>Seleccione el tipo de solicitud</option>
                                     <%
-                                        Metodos metodos = new Metodos();
-                                        Conexion solicitud = new Conexion();
-                                        Connection conn = solicitud.establecerConexion();
-                                        List<TipoSolicitud> tipoSolicitud = new ArrayList<>();
-                                        tipoSolicitud = metodos.obtenerTipoSolicitud(conn);
-                                        String htmls = metodos.generarHTMLTipoSolicitud(tipoSolicitud);
-                                        // Imprimir el contenido HTML
-                                        out.println(htmls);
+                                        Conexion conexion = new Conexion();
+                                        Connection conn = conexion.establecerConexion();
+                                        PreparedStatement pstmt = null;
+                                        ResultSet rs = null;
+
+                                        try {
+                                            String sql = "SELECT idTipoSolicitud, tipoSolicitud FROM tipoSolicitud";
+                                            pstmt = conn.prepareStatement(sql);
+                                            rs = pstmt.executeQuery();
+
+                                            while (rs.next()) {
+                                                int idTipoSolicitud = rs.getInt("idTipoSolicitud");
+                                                String nombre = rs.getString("tipoSolicitud");
+                                    %>
+                                    <option value="<%= idTipoSolicitud%>"><%= nombre %></option>
+                                    <%
+                                            }
+                                        } catch (SQLException e) {
+                                            e.printStackTrace();
+                                        } finally {
+                                            // Cierra la conexión y los recursos
+                                            try {
+                                                if (rs != null) {
+                                                    rs.close();
+                                                }
+                                                if (pstmt != null) {
+                                                    pstmt.close();
+                                                }
+                                                if (conn != null) {
+                                                    conn.close();
+                                                }
+                                            } catch (SQLException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
                                     %>
                                 </select>
                                 <p class="help-block text-danger"></p>
@@ -97,7 +127,7 @@
     <!-- Footer End -->
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-pri back-to-top"><i class="fa fa-angle-double-up"></i></a>
+    <a href="#" class="btn btn-lg btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

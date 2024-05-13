@@ -46,7 +46,7 @@ public class Metodos {
 
         return false; // Si hay algún error o no se encuentra la cédula, se devuelve false por defecto
     }
-    
+
     public static void agregarUsuario(String nombre, String apellido, String cedula, String telefono, String correo, String contrasena, String rol, HttpSession session, HttpServletResponse response) throws IOException {
         Conexion conexion = new Conexion();
         Connection conn = conexion.establecerConexion();
@@ -87,100 +87,42 @@ public class Metodos {
         }
     }
 
-    public List<TipoSolicitud> obtenerTipoSolicitud(Connection conn) throws SQLException {
-        List<TipoSolicitud> tipoSolicitud = new ArrayList<>();
-
-        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM tipoSolicitud");
-        ResultSet rs = stmt.executeQuery();
-
-        while (rs.next()) {
-            int idTipoSolicitud = rs.getInt("idTipoSolicitud");
-            String nombre = rs.getString("tipoSolicitud");
-
-            TipoSolicitud categoria = new TipoSolicitud(idTipoSolicitud, nombre);
-            tipoSolicitud.add(categoria);
-        }
-
-        return tipoSolicitud;
-    }
-
-    public static String generarHTMLTipoSolicitud(List<TipoSolicitud> tipoSolicitud) {
-        StringBuilder html = new StringBuilder();
-
-        for (TipoSolicitud tipoSolicitudes : tipoSolicitud) {
-            html.append("<option value=\"").append(tipoSolicitudes.getTipoSolicitud()).append("\">")
-                    .append(tipoSolicitudes.getTipoSolicitud())
-                    .append("</option>");
-
-        }
-
-        return html.toString();
-    }
-
-    public static int asignarIdTipoSolicitud(Connection conn, String tipoSolicitudSeleccionado) throws SQLException {
-        // Lista para almacenar los tipos de solicitud
-        List<String> tipoSolicitudes = new ArrayList<>();
-
-        PreparedStatement stmt = conn.prepareStatement("SELECT idTipoSolicitud, tipoSolicitud FROM tipoSolicitud");
-
-        ResultSet rs = stmt.executeQuery();
-
-        while (rs.next()) {
-            tipoSolicitudes.add(rs.getString("tipoSolicitud"));
-
-            if (rs.getString("tipoSolicitud").equals(tipoSolicitudSeleccionado)) {
-                return rs.getInt("idTipoSolicitud");
-            }
-        }
-
-        System.out.println("Lista de tipos de solicitud:");
-        for (String tipoSolicitud : tipoSolicitudes) {
-            System.out.println(tipoSolicitud);
-        }
-
-        return -1;
-    }
-
-    public static void agregarSolicitud(int idUsuario, String tipoSolicitud, Date fecha, String descripcion, String archivo, String respuesta, String estado, HttpSession session, HttpServletResponse response) throws IOException {
+    public static void agregarSolicitud(int idUsuario, int idTipoSolicitud, Date fecha, String descripcion, String archivo, String respuesta, String estado) {
         Conexion conexion = new Conexion();
         Connection conn = conexion.establecerConexion();
-        if (conn != null) {
+        PreparedStatement pstmt = null;
+        try {
+
+            String sql = "INSERT INTO solicitud(idUsuario, idTipoSolicitud, fecha, descripcion, archivo, respuesta, estado)"
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            pstmt = conn.prepareStatement(sql);
+
+            // Establecer parámetros del procedimiento almacenado
+            pstmt.setInt(1, idUsuario);
+            pstmt.setInt(2, idTipoSolicitud);
+            pstmt.setDate(3, fecha);
+            pstmt.setString(4, descripcion);
+            pstmt.setString(5, archivo);
+            pstmt.setString(6, respuesta);
+            pstmt.setString(7, estado);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
             try {
-
-                // Llamar al procedimiento almacenado
-                CallableStatement stmt = conn.prepareCall("{call agregarSolicitud(?, ?, ?, ?, ?, ?, ?)}");
-
-                int idTipoSolicitud = Metodos.asignarIdTipoSolicitud(conn, tipoSolicitud);
-
-                System.out.println("El idSolicitud es: " + idTipoSolicitud);
-
-                // Establecer parámetros del procedimiento almacenado
-                stmt.setInt(1, idUsuario);
-                stmt.setInt(2, idTipoSolicitud);
-                stmt.setDate(3, fecha);
-                stmt.setString(4, descripcion);
-                stmt.setString(5, archivo);
-                stmt.setString(6, respuesta);
-                stmt.setString(7, estado);
-
-                // Ejecutar el procedimiento almacenado
-                stmt.execute();
-
-                // Cerrar la conexión
-                conn.close();
-
-                // Redirigir a alguna página de éxito o mostrar un mensaje de éxito
-                response.sendRedirect("solicitudesUsuario.jsp"); // Redirigir a una página de éxito
-
-                System.out.println("Conexion exitosa");
-
-            } catch (SQLException e) { // Manejar cualquier error de SQL
-                response.getWriter().println("Error al agregar pruebe de nuevo" + e.getMessage()); // Esto mostrará un mensaje de error en la página
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } else {
-            // Manejar el caso en que no se pueda obtener una conexión a la base de datos
-            response.getWriter().println("No se pudo establecer una conexión a la base de datos."); // Esto mostrará un mensaje de error en la página
         }
+
     }
 
     public static List<Solicitud> obtenerSolicitudes(Connection conn) throws SQLException {
@@ -213,17 +155,16 @@ public class Metodos {
         return solicitudes;
     }
 
-    public static void editarSolicitud(int p_idSolicitud, int p_tipoSolicitud, String p_descripcion, String p_archivo) {
+    public static void editarSolicitud(int p_idSolicitud, int p_idTipoSolicitud, String p_descripcion, String p_archivo) {
         PreparedStatement pstmt = null;
         Conexion conexion = new Conexion();
         Connection conn = conexion.establecerConexion();
         try {
             System.out.println("Entre a la edición");
-            // Preparar la consulta SQL
-            String sql = "UPDATE solicitud SET tipoSolicitud =?, descripcion =?, archivo =? WHERE idSolicitud =?";
+            String sql = "UPDATE solicitud SET idTipoSolicitud =?, descripcion =?, archivo =? WHERE idSolicitud =?";
             pstmt = conn.prepareStatement(sql);
-            // Establecer los parámetros de la consulta
-            pstmt.setInt(1, p_tipoSolicitud);
+            
+            pstmt.setInt(1, p_idTipoSolicitud);
             pstmt.setString(2, p_descripcion);
             pstmt.setString(3, p_archivo);
             pstmt.setInt(4, p_idSolicitud);
@@ -361,44 +302,6 @@ public class Metodos {
         response.getWriter().write(formularioHTML);
     }
 
-    public static void editarSolicitud(int idSolicitud, int idUsuario, String tipoSolicitud, String fecha, String descripcion, String archivo, String estado, HttpSession session, HttpServletResponse response, Metodos metodos) throws IOException {
-        Conexion conexion = new Conexion();
-        Connection conn = conexion.establecerConexion();
-
-        int idTipoSolicitud = 0;
-        try {
-            idTipoSolicitud = metodos.asignarIdTipoSolicitud(conn, tipoSolicitud);
-        } catch (SQLException ex) {
-            Logger.getLogger(SvEditar.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        String sql = "CALL editarTutorial(?, ?, ?, ?, ?, ?, ?)";
-        try (CallableStatement stmt = conn.prepareCall(sql)) {
-            stmt.setInt(1, idUsuario);
-            stmt.setInt(1, idUsuario);
-            stmt.setInt(2, idTipoSolicitud);
-            stmt.setString(3, fecha);
-            stmt.setString(4, descripcion);
-            stmt.setString(5, archivo);
-            stmt.setString(6, estado);
-
-            stmt.execute();
-        } catch (SQLException ex) {
-            Logger.getLogger(SvEditar.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try {
-            // Cerrar la conexión
-            conn.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(SvEditar.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        // Redirigir a alguna página de éxito o mostrar un mensaje de éxito
-        response.sendRedirect("solicitudesUsuario.jsp"); // Redirigir a una página de éxito
-
-    }
-
     public static void eliminarSolicitud(int idSolicitud) throws IOException {
         Conexion conexion = new Conexion();
         Connection conn = conexion.establecerConexion();
@@ -430,7 +333,7 @@ public class Metodos {
             }
         }
     }
-    
+
     public String[] iniciarSesion(String cedula, String contrasena) {
         Conexion conexion = new Conexion();
         Connection conn = conexion.establecerConexion();

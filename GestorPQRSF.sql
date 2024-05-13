@@ -29,7 +29,7 @@ VALUES ('Petición'),
 	   ('Queja'),
        ('Reclamo'),
        ('Sugerencia'),
-	   ('Felicitacion');
+	   ('Felicitación');
 
 -- Crear la tabla solicitud para definir el tipo de solicitud
 CREATE TABLE solicitud(

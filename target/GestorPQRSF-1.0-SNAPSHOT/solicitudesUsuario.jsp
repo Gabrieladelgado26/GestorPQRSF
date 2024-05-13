@@ -39,7 +39,7 @@
         <!-- Customized Bootstrap Stylesheet -->
         <link href="css/style.css" rel="stylesheet">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-K2y4n6Oz6LIC7eD5KBUf+RmJsHi3q4E0YIy9/f3Xf0s=" crossorigin="anonymous"></script>
-        
+
     </head>
 
     <body>
@@ -73,8 +73,7 @@
                     </div>
                 </div>
                 <div class="row pb-3 justify-content-center">
-                    <%  
-                        String idUsuarioStr = (String) session.getAttribute("idUsuario");
+                    <%                        String idUsuarioStr = (String) session.getAttribute("idUsuario");
                         int idUsuario = (idUsuarioStr != null) ? Integer.parseInt(idUsuarioStr) : 0;
                         Conexion conexion = new Conexion();
                         Connection conn = conexion.establecerConexion();
@@ -162,7 +161,7 @@
                                     e.printStackTrace();
                                 }
                             }
-                        } %>
+                        }%>
                 </div>
                 <div class="col-md-12 mb-4">
                     <nav aria-label="Page navigation">
@@ -233,14 +232,14 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form action="SvEditar" method="POST" id="editForm">
+                            <form action="SvEditar" method="POST" id="editForm" enctype="multipart/form-data">
                                 <div class="mb-3" hidden>
                                     <label for="idSolicitud" class="col-form-label">ID Solicitud:</label>
-                                    <input type="text" class="form-control" id="idSolicitud" name="idSolicitud" placeholder="ID de la solicitud" readonly required>
+                                    <input type="text" class="form-control" id="idSolicitud" name="idSolicitud" value="<%= request.getParameter("idSolicitud")%>" placeholder="ID de la solicitud" readonly required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="tipoSolicitud" class="col-form-label">Tipo de Solicitud:</label>
-                                    <select class="form-control" name="tipoSolicitud" id="tipoSolicitud" required>
+                                    <select type="text" class="form-control" id="tipoSolicitud" name="tipoSolicitud" required="required" data-validation-required-message="Porfavor ingrese el tipo de solicitud a realizar">
                                         <option value="" selected disabled>Seleccione el tipo de solicitud</option>
                                         <%
                                             try {
@@ -281,6 +280,7 @@
                                     <label for="descripcion" class="col-form-label">Descripcion: </label>
                                     <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
                                 </div>
+                                <input type="hidden" class="form-control" id="rutaArchivoAnterior" name="rutaArchivoAnterior" value="<%= request.getParameter("rutaarchivo")%>" readonly required>
                                 <div class="mb-3">
                                     <label for="archivo" class="col-form-label">Archivo:</label>
                                     <input type="text" class="form-control" id="archivo_nombre" readonly>
@@ -301,6 +301,29 @@
                 </div>
             </div>
         </div>
+
+        <script>
+            $(document).ready(function () {
+                $('#editar').on('show.bs.modal', function (event) {
+                    var button = $(event.relatedTarget);
+                    var idSolicitud = button.data('idsolicitud');
+                    var tipoSolicitud = button.data('tiposolicitud');
+                    var descripcion = button.data('descripcion');
+                    var rutaArchivo = button.data('rutaarchivo');
+
+                    var modal = $(this);
+                    modal.find('.modal-body #idSolicitud').val(idSolicitud);
+                    modal.find('.modal-body #tipoSolicitud').val(tipoSolicitud);
+                    modal.find('.modal-body #descripcion').val(descripcion);
+                    modal.find('.modal-body #archivo_nombre').val(rutaArchivo);
+                    modal.find('#tipoSolicitud option').each(function () {
+                        if ($(this).text() === tipoSolicitud) {
+                            $(this).prop('selected', true);
+                        }
+                    });
+                });
+            });
+        </script>
 
         <div class="modal fade" id="eliminar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="eliminarLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">

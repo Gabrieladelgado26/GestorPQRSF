@@ -7,9 +7,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -50,11 +47,14 @@ public class SvEditar extends HttpServlet {
         int idSolicitud = Integer.parseInt(request.getParameter("idSolicitud"));
         int idTipoSolicitud = Integer.parseInt(request.getParameter("tipoSolicitud"));
         String descripcion = request.getParameter("descripcion");
+        
         Part filePart = request.getPart("archivo");
         String rutaArchivo = null;
         if (filePart != null && filePart.getSize() > 0) {
+            // Obtener el nombre del archivo
             String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
 
+            // Guardar el archivo en la carpeta "archivos"
             String uploadPath = getServletContext().getRealPath("") + File.separator + "archivos";
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {
@@ -64,11 +64,14 @@ public class SvEditar extends HttpServlet {
             try (InputStream fileContent = filePart.getInputStream()) {
                 Files.copy(fileContent, Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
             }
+
+            // Ruta del archivo (ruta relativa)
             rutaArchivo = File.separator + fileName;
         } else {
+            // Si no se ha adjuntado un nuevo archivo, utilizar la ruta del archivo anterior
             rutaArchivo = request.getParameter("rutaArchivoAnterior");
         }
-        
+
         metodos.editarSolicitud(idSolicitud, idTipoSolicitud, descripcion, rutaArchivo);
 
         response.sendRedirect("solicitudesUsuario.jsp");

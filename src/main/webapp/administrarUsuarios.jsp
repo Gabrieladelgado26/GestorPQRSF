@@ -131,8 +131,8 @@
                                             <i class="fas fa-edit"></i> 
                                         </a>
                                         <%
-                                            String rolUsuario = rol;
-                                            boolean esUsuarioNormal = rolUsuario.equals("Usuario");
+                                            String rolU = rol;
+                                            boolean esUsuarioNormal = rolU.equals("Usuario");
                                             if (esUsuarioNormal) {%>
                                         <!-- Mostrar el botón de eliminar solo si el usuario es un usuario normal -->
                                         <a href="#" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#eliminar" onclick="setearIdSolicitud(<%= idUsuario%>);"><i class="fas fa-trash"></i></a>

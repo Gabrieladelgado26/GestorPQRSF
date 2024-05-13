@@ -143,7 +143,7 @@
                                     <% } else { %>
                                     <!-- Botón deshabilitado si archivo es null -->
                                     <button class="btn btn-primary" disabled>
-                                        <i class="fas fa-file-download"></i> Abrir PDF
+                                        <i class="fas fa-file-download"></i> Sin PDF
                                     </button>
                                     <% }%>
                                 </td>

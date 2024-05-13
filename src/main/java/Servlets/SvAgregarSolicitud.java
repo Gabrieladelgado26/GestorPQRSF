@@ -43,9 +43,9 @@ public class SvAgregarSolicitud extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
         int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
-        String tipoSolicitud = request.getParameter("tipoSolicitud");
+        int idTipoSolicitud = Integer.parseInt(request.getParameter("tipoSolicitud"));
+
         // Convertir la cadena de texto de la fecha a un objeto java.sql.Date
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date fecha = null;
@@ -55,8 +55,7 @@ public class SvAgregarSolicitud extends HttpServlet {
             e.printStackTrace(); // Manejar la excepción adecuadamente
         }
         String descripcion = request.getParameter("descripcion");
-        
-        
+
         Part filePart = request.getPart("archivo");
         String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
         String uploadPath = getServletContext().getRealPath("") + File.separator + "archivos";
@@ -71,8 +70,10 @@ public class SvAgregarSolicitud extends HttpServlet {
         String archivo = File.separator + fileName;
         String respuesta = "Sin respuesta";
         String estado = "Por revisar";
-        
-        Metodos.agregarSolicitud(idUsuario, tipoSolicitud, fecha, descripcion, archivo, respuesta, estado, session, response);
+
+        Metodos.agregarSolicitud(idUsuario, idTipoSolicitud, fecha, descripcion, archivo, respuesta, estado);
+
+        response.sendRedirect("solicitudesUsuario.jsp");
     }
 
     /**
